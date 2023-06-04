@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.mfxresources.fonts.MFXFontIcon?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0"
+            xmlns="http://javafx.com/javafx/20.0.1" fx:controller="tw.edu.ncku.csie.javaminesweeper.GameSceneController">
+    <top>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <children>
+                <MFXButton onMouseClicked="#handleBackButton" text="">
+                    <graphic>
+                        <MFXFontIcon description="fas-arrow-left"/>
+                    </graphic>
+                </MFXButton>
+                <Region prefHeight="200.0" prefWidth="200.0"/>
+                <Label fx:id="timerLabel" alignment="CENTER" minWidth="40.0" text="Time"/>
+                <Region prefHeight="200.0" prefWidth="200.0"/>
+                <MFXButton text="">
+                    <graphic>
+                        <MFXFontIcon description="fas-gear"/>
+                    </graphic>
+                </MFXButton>
+            </children>
+        </HBox>
+    </top>
+    <bottom>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <MFXButton onMouseClicked="#handleRestartButton" text="">
+                    <graphic>
+                        <MFXFontIcon description="fas-arrow-rotate-left" size="32"/>
+                    </graphic>
+                </MFXButton>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

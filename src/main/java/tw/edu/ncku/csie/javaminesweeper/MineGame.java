@@ -1,29 +1,27 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.css.themes.Themes;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import javafx.application.Application;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
+import javafx.util.Duration;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.palexdev.materialfx.css.themes.MFXThemeManager;
-
-import javafx.beans.property.BooleanProperty;
-
-public class MineGame extends Application {
+public class MineGame extends Pane {
     private static final int TILE_SIZE = 40;
     private static final int W = 400;
     private static final int H = 400;
@@ -31,24 +29,29 @@ public class MineGame extends Application {
     private static final int Y_TILES = H / TILE_SIZE;
 
     private Tile[][] grid = new Tile[X_TILES][Y_TILES];
+    private ArrayList<Tile> bombs = new ArrayList<>();
     private Scene scene;
     private boolean init = false;
+    private boolean isDone = false;
     private int bombCount = 0;
     private int openedCount = 0;
 
-    private Parent createContent() {
-        Pane root = new Pane();
-        root.setPrefSize(W, H);
+    private int seconds = 0;
+    private Label timerLabel;
+    private Timeline timeline;
+
+
+    MineGame() {
+        setPrefSize(W, H);
 
 
         for (int y = 0; y < Y_TILES; y++) {
             for (int x = 0; x < X_TILES; x++) {
                 Tile tile = new Tile(x, y, TILE_SIZE);
                 grid[x][y] = tile;
-                root.getChildren().add(tile);
+                getChildren().add(tile);
             }
         }
-        return root;
     }
 
     private void createBomb(int initX, int initY) {
@@ -57,6 +60,7 @@ public class MineGame extends Application {
                 if (x != initX && y != initY && x != (initX + 1) && x != (initX - 1) && y != (initY + 1) && y != (initY - 1) && Math.random() < 0.1) {
                     this.bombCount++;
                     this.grid[x][y].addBombToButton();
+                    this.bombs.add(this.grid[x][y]);
                 }
             }
         }
@@ -189,6 +193,10 @@ public class MineGame extends Application {
                 init = true;
                 createBomb(this.x, this.y);
                 openedCount++;
+                startTimer();
+            }
+            if (this.isFlag.get() || isDone) {
+                return;
             }
             if (e.getButton() == MouseButton.PRIMARY && !this.isFlag.get()) {
                 switch (this.type) {
@@ -207,9 +215,11 @@ public class MineGame extends Application {
                     }
                     case BOMB -> {
                         this.icon.setVisible(true);
-                        this.button.setStyle("-fx-background-color: white;");
+                        this.button.setStyle("-fx-background-color: red;");
+                        showBombs();
 //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
+                        isDone = true;
                     }
                 }
             }
@@ -220,6 +230,9 @@ public class MineGame extends Application {
             }
             if ((X_TILES * Y_TILES) - openedCount == bombCount) {
                 System.out.println("done!!!");
+                stopTimer();
+                System.out.println(getTime());
+                isDone = true;
             }
 
         }
@@ -246,6 +259,23 @@ public class MineGame extends Application {
 
     }
 
+    public void showBombs() {
+        for (Tile i : this.bombs) {
+            i.icon.setVisible(true);
+            i.button.setStyle("-fx-background-color: red;");
+//                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+            i.isOpen = true;
+        }
+    }
+
+    public boolean getInit() {
+        return this.init;
+    }
+
+    public boolean getDone() {
+        return this.isDone;
+    }
+
     public void dfs(int x, int y) {
         List<Tile> l = getNeighbors(this.grid[x][y]);
         for (Tile i : l) {
@@ -255,16 +285,30 @@ public class MineGame extends Application {
         }
     }
 
-    @Override
-    public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(createContent());
-        MFXThemeManager.addOn(scene, Themes.DEFAULT, Themes.LEGACY);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+    public void startTimer() {
+        BorderPane parent = (BorderPane) getParent();
+        this.timerLabel = (Label) parent.lookup("#timerLabel");
+        this.timeline = new Timeline(new KeyFrame(Duration.seconds(1), actionEvent -> {
+            this.seconds++;
+            updateTimerLabel();
+        }));
+        this.timeline.setCycleCount(Animation.INDEFINITE);
+        this.timeline.play();
     }
 
-    public static void main(String[] args) {
-        launch();
+    public void stopTimer() {
+        this.timerLabel.setText("Timer");
+        this.timeline.stop();
+    }
+
+    public int getTime() {
+        return this.seconds;
+    }
+
+    private void updateTimerLabel() {
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        String timeString = String.format("%02d:%02d", minutes, remainingSeconds);
+        this.timerLabel.setText(timeString);
     }
 }
