@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.mfxresources.fonts.MFXFontIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox prefHeight="100.0" prefWidth="200.0" />
+      <MFXFontIcon description="fas-gear" size="100.0" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+         <children>
+            <MFXButton text="">
+               <graphic>
+                  <MFXFontIcon description="fas-angle-left" />
+               </graphic>
+            </MFXButton>
+            <Label text="Easy" />
+            <MFXButton text="">
+               <graphic>
+                  <MFXFontIcon description="fas-angle-right" />
+               </graphic>
+            </MFXButton>
+         </children></HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <MFXButton text="New Game" />
+         </children></HBox>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <MFXFontIcon description="fas-gear" />
+            <MFXFontIcon description="fas-align-left" />
+            <MFXFontIcon description="fas-align-left" />
+            <MFXFontIcon description="fas-circle-info" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>
