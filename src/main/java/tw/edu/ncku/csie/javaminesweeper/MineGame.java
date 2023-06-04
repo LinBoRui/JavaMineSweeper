@@ -198,7 +198,7 @@ public class MineGame extends Pane {
             if (this.isFlag.get() || isDone) {
                 return;
             }
-            if (e.getButton() == MouseButton.PRIMARY && !this.isFlag.get()) {
+            if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && !this.isFlag.get()) {
                 switch (this.type) {
                     case NONE -> {
                         this.button.setStyle("-fx-background-color: white;");
@@ -223,7 +223,7 @@ public class MineGame extends Pane {
                     }
                 }
             }
-            if (e.getButton() == MouseButton.SECONDARY) {
+            if ((e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick())) {
                 if (!this.isOpen) {
                     this.isFlag.set(!this.isFlag.get());
                 }

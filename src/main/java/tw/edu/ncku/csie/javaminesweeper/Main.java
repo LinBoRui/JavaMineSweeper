@@ -38,6 +38,7 @@ public class Main extends Application {
     }
 
     public static void addFxml(String fxml) throws IOException {
+
         addNode(loadFxml(fxml));
     }
 
