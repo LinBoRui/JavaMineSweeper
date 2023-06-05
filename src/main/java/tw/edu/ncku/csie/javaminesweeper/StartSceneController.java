@@ -1,14 +1,19 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
 public class StartSceneController {
+    private String[] difficultyArr = {"easy", "medium", "hard"};
+    private int diffIdx = 0;
     @FXML
     private VBox root;
+    @FXML
+    private Label difficulty;
 
     @FXML
     protected void onHelloButtonClick() {
@@ -16,16 +21,27 @@ public class StartSceneController {
     }
 
     @FXML
-    protected void handleStartGameButton() throws IOException {
+    protected void initialize() {
+        difficulty.setText(difficultyArr[diffIdx]);
+    }
 
-//        StackPane rootPane = (StackPane) this.root.getParent();
-//        rootPane.getChildren().clear();
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("gamescene.fxml"));
+    @FXML
+    protected void handleStartGameButton() throws IOException {
         BorderPane p = (BorderPane) Main.loadFxml("gamescene");
-        p.setCenter(new MineGame());
+        p.setCenter(new MineGame(diffIdx));
         p.setStyle("-fx-background-color: white");
         Main.addNode(p);
+    }
 
-//        rootPane.getChildren().add(p);
+    @FXML
+    protected void handleLeftButton() {
+        diffIdx = (diffIdx + 2) % 3;
+        this.difficulty.setText(difficultyArr[diffIdx]);
+    }
+
+    @FXML
+    protected void handleRightButton() {
+        diffIdx = (diffIdx + 1) % 3;
+        this.difficulty.setText(difficultyArr[diffIdx]);
     }
 }

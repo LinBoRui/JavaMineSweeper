@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MineGame extends Pane {
-    private static final int TILE_SIZE = 40;
+    private static int TILE_SIZE = 40;
     private static final int W = 400;
     private static final int H = 400;
-    private static final int X_TILES = W / TILE_SIZE;
-    private static final int Y_TILES = H / TILE_SIZE;
+    private static int X_TILES = W / TILE_SIZE;
+    private static int Y_TILES = H / TILE_SIZE;
 
     private Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private ArrayList<Tile> bombs = new ArrayList<>();
@@ -45,6 +45,33 @@ public class MineGame extends Pane {
         setPrefSize(W, H);
 
 
+        for (int y = 0; y < Y_TILES; y++) {
+            for (int x = 0; x < X_TILES; x++) {
+                Tile tile = new Tile(x, y, TILE_SIZE);
+                grid[x][y] = tile;
+                getChildren().add(tile);
+            }
+        }
+    }
+
+    MineGame(int difficulty) {
+        setPrefSize(W, H);
+        switch (difficulty) {
+            case 0 -> {
+            }
+            case 1 -> {
+                TILE_SIZE = 20;
+                X_TILES = W / TILE_SIZE;
+                Y_TILES = H / TILE_SIZE;
+                grid = new Tile[X_TILES][Y_TILES];
+            }
+            case 2 -> {
+                TILE_SIZE = 10;
+                X_TILES = W / TILE_SIZE;
+                Y_TILES = H / TILE_SIZE;
+                grid = new Tile[X_TILES][Y_TILES];
+            }
+        }
         for (int y = 0; y < Y_TILES; y++) {
             for (int x = 0; x < X_TILES; x++) {
                 Tile tile = new Tile(x, y, TILE_SIZE);
