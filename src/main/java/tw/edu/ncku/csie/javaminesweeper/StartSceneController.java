@@ -34,9 +34,9 @@ public class StartSceneController {
 
     @FXML
     protected void onSettingClicked(ActionEvent event) throws IOException {
-        Pane rootPane = (Pane) root.getParent();
-        Main.addFxml("settingscene");
-        rootPane.getChildren().get(rootPane.getChildren().size() - 1).setStyle("-fx-background-color: white");
+        VBox pane = (VBox) Main.loadFxml("settingscene");
+        pane.setStyle("-fx-background-color: white");
+        Main.addNode(pane);
     }
 
     @FXML
