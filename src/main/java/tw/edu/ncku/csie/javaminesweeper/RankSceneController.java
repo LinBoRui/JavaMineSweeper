@@ -45,8 +45,7 @@ public class RankSceneController {
     }
     
     @FXML
-    private void goMenu() {
-        Main.removeNode(1);
+    private void rankButtonClick() {
         Main.removeNode(1);
     }
 }

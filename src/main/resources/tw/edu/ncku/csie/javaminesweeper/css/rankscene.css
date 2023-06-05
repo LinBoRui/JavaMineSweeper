@@ -6,12 +6,10 @@
     -fx-background-radius: 15;
     -fx-border-color: -border-color;
     -fx-border-radius: 15;
-    -fx-padding: 5;
 }
 
 #rankButton {
     -fx-background-radius: 20;
     -fx-border-color: -border-color;
     -fx-border-radius: 20;
-    -fx-padding: 5;
 }
