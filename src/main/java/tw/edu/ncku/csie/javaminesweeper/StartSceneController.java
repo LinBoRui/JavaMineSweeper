@@ -16,9 +16,6 @@ public class StartSceneController {
     @FXML
     private Label difficultyLabel;
 
-    private String[] difficultyArr = {"easy", "medium", "hard"};
-    private int diffcultyIdx = 0;
-
     @FXML
     protected void onHelloButtonClick() {
 //        welcomeText.setText("Welcome to JavaFX Application!");
@@ -27,7 +24,7 @@ public class StartSceneController {
     @FXML
     protected void handleStartGameButton() throws IOException {
         BorderPane p = (BorderPane) Main.loadFxml("gamescene");
-        p.setCenter(new MineGame(diffcultyIdx));
+        p.setCenter(new MineGame());
 //        p.setPrefSize(600, 600);
         p.setStyle("-fx-background-color: white");
         Main.addNode(p);
@@ -44,13 +41,13 @@ public class StartSceneController {
 
     @FXML
     protected void handleChangeDifficultyLeft() {
-        diffcultyIdx = (diffcultyIdx + 2) % 3;
-        difficultyLabel.setText(difficultyArr[diffcultyIdx]);
+        Level.changeLevel(2);
+        difficultyLabel.setText(Level.getLevelString());
     }
 
     @FXML
     protected void handleChangeDifficultyRight() {
-        diffcultyIdx = (diffcultyIdx + 1) % 3;
-        difficultyLabel.setText(difficultyArr[diffcultyIdx]);
+        Level.changeLevel(1);
+        difficultyLabel.setText(Level.getLevelString());
     }
 }

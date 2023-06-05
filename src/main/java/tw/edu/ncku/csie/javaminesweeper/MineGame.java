@@ -44,29 +44,20 @@ public class MineGame extends Pane {
 
     MineGame() {
         setMaxSize(W, H);
-
-
-        for (int y = 0; y < Y_TILES; y++) {
-            for (int x = 0; x < X_TILES; x++) {
-                Tile tile = new Tile(x, y, TILE_SIZE);
-                grid[x][y] = tile;
-                getChildren().add(tile);
+        switch (Level.currLevel) {
+            case EASY -> {
+                TILE_SIZE = 40;
+                X_TILES = W / TILE_SIZE;
+                Y_TILES = H / TILE_SIZE;
+                grid = new Tile[X_TILES][Y_TILES];
             }
-        }
-    }
-
-    MineGame(int difficulty) {
-        setMaxSize(W, H);
-        switch (difficulty) {
-            case 0 -> {
-            }
-            case 1 -> {
+            case MEDIUM -> {
                 TILE_SIZE = 25;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
             }
-            case 2 -> {
+            case HARD -> {
                 TILE_SIZE = 20;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
@@ -334,6 +325,8 @@ public class MineGame extends Pane {
                 setBombCount(0);
                 System.out.println(getTime());
                 isDone = true;
+                Rank.updateScore(new RankItem(getTime()));
+                Rank.showRanking();
             }
         }
 
