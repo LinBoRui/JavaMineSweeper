@@ -1,7 +1,11 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -27,5 +31,12 @@ public class StartSceneController {
         Main.addNode(p);
 
 //        rootPane.getChildren().add(p);
+    }
+
+    @FXML
+    protected void onSettingClicked(ActionEvent event) throws IOException {
+        Pane rootPane = (Pane) root.getParent();
+        Main.addFxml("settingscene");
+        rootPane.getChildren().get(rootPane.getChildren().size()-1).setStyle("-fx-background-color: white");
     }
 }

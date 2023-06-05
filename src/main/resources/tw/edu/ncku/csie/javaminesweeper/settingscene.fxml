@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
+<?import io.github.palexdev.materialfx.controls.MFXSlider?>
+<?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
+<?import io.github.palexdev.mfxresources.fonts.MFXFontIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" cache="true" onDragExited="#onDelaySliderDrag" prefHeight="448.0" prefWidth="391.0" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tw.edu.ncku.csie.javaminesweeper.Setting">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+    </padding>
+    <children>
+      <MFXButton alignment="CENTER" onAction="#onReturnMenu" text="">
+         <graphic>
+            <MFXFontIcon description="fas-arrow-left" />
+         </graphic>
+         <VBox.margin>
+            <Insets right="300.0" />
+         </VBox.margin>
+      </MFXButton>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Settings">
+            <font>
+                <Font name="Microsoft YaHei" size="29.0" />
+            </font>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Easy digging">
+            <font>
+                <Font name="Microsoft YaHei" size="14.0" />
+            </font>
+        </Text>
+        <MFXToggleButton fx:id="easyDig_button" alignment="CENTER" onMouseClicked="#easyDigButtonHandler" text="Off" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Easy flagging">
+            <font>
+                <Font name="Microsoft YaHei" size="14.0" />
+            </font>
+        </Text>
+        <MFXToggleButton fx:id="easyFlag_button" alignment="CENTER" onMouseClicked="#easyFlagButtonHandler" text="Off" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Default left click action">
+            <font>
+                <Font name="Microsoft YaHei" size="14.0" />
+            </font>
+        </Text>
+        <HBox maxWidth="200.0" prefHeight="44.0" prefWidth="200.0">
+            <children>
+                <MFXRadioButton fx:id="dig_button" contentDisplay="TOP" contentDisposition="TOP" graphicTextGap="10.0" onMouseClicked="#onDefaultToggle" prefHeight="44.0" prefWidth="100.0" selected="true" text="" viewOrder="-1.0">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="haha" />
+                    </toggleGroup>
+               <graphic>
+                   <MFXFontIcon description="fas-person-digging" size="40.0" />
+               </graphic>
+                </MFXRadioButton>
+                <MFXRadioButton fx:id="flag_button" contentDisplay="TOP" contentDisposition="TOP" graphicTextGap="10.0" onMouseClicked="#onDefaultToggle" prefHeight="44.0" prefWidth="100.0" text="" toggleGroup="$haha">
+               <graphic>
+                   <MFXFontIcon description="fas-flag" size="40.0" />
+               </graphic></MFXRadioButton>
+            </children>
+        </HBox>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Long tap delay">
+            <font>
+                <Font name="Microsoft YaHei" size="14.0" />
+            </font>
+        </Text>
+        <Text fx:id="delay_value" strokeType="OUTSIDE" strokeWidth="0.0" text="150 ms">
+            <font>
+                <Font name="Microsoft YaHei" size="12.0" />
+            </font>
+        </Text>
+        <MFXSlider fx:id="delay_slider" enableKeyboard="false" max="450.0" min="150.0" onMouseClicked="#onDelaySliderDrag" onMouseDragged="#onDelaySliderDrag" prefHeight="4.0" prefWidth="171.0" showTicksAtEdges="false" value="150.0" />
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="150 ms                                      450 ms" wrappingWidth="187.88635396957397">
+            <font>
+                <Font name="Microsoft YaHei" size="10.0" />
+            </font>
+        </Text>
+    </children>
+</VBox>
