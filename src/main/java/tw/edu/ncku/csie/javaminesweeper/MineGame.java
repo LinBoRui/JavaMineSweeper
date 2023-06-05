@@ -238,7 +238,7 @@ public class MineGame extends Pane {
             this.getChildren().set(0, this.button);
         }
 
-        public void easyDig(Tile tile, List<Tile> l) {
+        public void easyDig(List<Tile> l) {
             int flagCount = (int) l.stream().filter(tile1 -> tile1.isFlag.get()).count();
             if (this.number == flagCount) {
                 dfs(this.x, this.y);
@@ -255,7 +255,7 @@ public class MineGame extends Pane {
             }
         }
 
-        public void easyFlag(Tile tile, List<Tile> l) {
+        public void easyFlag(List<Tile> l) {
             int blankCount = (int) l.stream().filter(tile1 -> !tile1.isOpen).count();
             if (this.number == blankCount) {
                 for (Tile i : l) {
@@ -273,7 +273,6 @@ public class MineGame extends Pane {
             if (!init) {
                 init = true;
                 createBomb(this.x, this.y);
-                openedCount++;
                 startTimer();
             }
             if (isDone) {
@@ -283,10 +282,10 @@ public class MineGame extends Pane {
                 if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && this.type == TileType.NUM) {
                     List<Tile> l = getNeighbors(this);
                     if (Setting.isEasyDig()) {
-                        easyDig(this, l);
+                        easyDig(l);
                     }
                     if (Setting.isEasyFlag()) {
-                        easyFlag(this, l);
+                        easyFlag(l);
                     }
                 }
             }
@@ -296,6 +295,7 @@ public class MineGame extends Pane {
                         this.button.setStyle("-fx-background-color: white;");
 //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
+                        openedCount++;
                         dfs(this.x, this.y);
                     }
                     case NUM -> {
@@ -335,7 +335,6 @@ public class MineGame extends Pane {
                 System.out.println(getTime());
                 isDone = true;
             }
-
         }
 
         public void toggle() {
