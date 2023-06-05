@@ -36,7 +36,6 @@ public class MineGame extends Pane {
     private int bombCount = 0;
     private int flagCount = 0;
     private int openedCount = 0;
-    private int flagCount = 0;
 
     private int seconds = 0;
     private Label timerLabel;
@@ -72,7 +71,6 @@ public class MineGame extends Pane {
                 getChildren().add(tile);
             }
         }
-        flagCount = 0;
     }
 
     private void createBomb(int initX, int initY) {
@@ -311,12 +309,6 @@ public class MineGame extends Pane {
             }
             else if ((e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick())) {
                 if (!this.isOpen) {
-                    if (this.isFlag.get()) {
-                        flagCount--;
-                    }
-                    else {
-                        flagCount++;
-                    }
                     this.isFlag.set(!this.isFlag.get());
                     flagCount += this.isFlag.get()? 1 : -1;
                     setBombCount(bombCount-flagCount);
