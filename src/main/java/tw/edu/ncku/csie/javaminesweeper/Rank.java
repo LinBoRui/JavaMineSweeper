@@ -11,12 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 
 public class Rank implements Serializable {
     private static Map<Level, List<RankItem>> ranking = null;
@@ -60,7 +54,7 @@ public class Rank implements Serializable {
         for (int i = 0; i < rankList.size(); i++) {
             RankItem item = rankList.get(i);
             if (item.getTime() > rankItem.getTime()) {
-                rankList.add(i, item);
+                rankList.add(i, rankItem);
                 recentIndex = i;
                 hasAdd = true;
                 break;
@@ -83,9 +77,7 @@ public class Rank implements Serializable {
 
     public static void showRanking() {
         try {
-            Pane child = (Pane) Main.loadFxml("RankScene");
-            child.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.3), CornerRadii.EMPTY, Insets.EMPTY)));
-            Main.addNode(child);
+            Main.addFxml("RankScene");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
