@@ -35,6 +35,7 @@ public class MineGame extends Pane {
     private boolean isDone = false;
     private int bombCount = 0;
     private int openedCount = 0;
+    private int flagCount = 0;
 
     private int seconds = 0;
     private Label timerLabel;
@@ -43,29 +44,20 @@ public class MineGame extends Pane {
 
     MineGame() {
         setMaxSize(W, H);
-
-
-        for (int y = 0; y < Y_TILES; y++) {
-            for (int x = 0; x < X_TILES; x++) {
-                Tile tile = new Tile(x, y, TILE_SIZE);
-                grid[x][y] = tile;
-                getChildren().add(tile);
+        switch (Level.currLevel) {
+            case EASY -> {
+                TILE_SIZE = 40;
+                X_TILES = W / TILE_SIZE;
+                Y_TILES = H / TILE_SIZE;
+                grid = new Tile[X_TILES][Y_TILES];
             }
-        }
-    }
-
-    MineGame(int difficulty) {
-        setMaxSize(W, H);
-        switch (difficulty) {
-            case 0 -> {
-            }
-            case 1 -> {
+            case MEDIUM -> {
                 TILE_SIZE = 25;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
             }
-            case 2 -> {
+            case HARD -> {
                 TILE_SIZE = 20;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
@@ -79,6 +71,7 @@ public class MineGame extends Pane {
                 getChildren().add(tile);
             }
         }
+        flagCount = 0;
     }
 
     private void createBomb(int initX, int initY) {
@@ -273,7 +266,14 @@ public class MineGame extends Pane {
             }
             if ((e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick())) {
                 if (!this.isOpen) {
+                    if (this.isFlag.get()) {
+                        flagCount--;
+                    }
+                    else {
+                        flagCount++;
+                    }
                     this.isFlag.set(!this.isFlag.get());
+                    setBombCount(bombCount - flagCount);
                 }
             }
             if ((X_TILES * Y_TILES) - openedCount == bombCount) {
@@ -281,6 +281,8 @@ public class MineGame extends Pane {
                 stopTimer();
                 System.out.println(getTime());
                 isDone = true;
+                Rank.updateScore(new RankItem(getTime()));
+                Rank.showRanking();
             }
 
         }

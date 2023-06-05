@@ -37,17 +37,16 @@ public class Main extends Application {
         return fxmlLoader.load();
     }
 
-    public static void addFxml(String fxml) throws IOException {
-
-        addNode(loadFxml(fxml));
-    }
-
     public static void addNode(Node node) {
         rootPane.getChildren().add(node);
     }
 
     public static void removeNode(int idx) {
         rootPane.getChildren().remove(rootPane.getChildren().size() - idx);
+    }
+
+    public static void addFxml(String fxml) throws IOException {
+        addNode(loadFxml(fxml));
     }
 
     public static void main(String[] args) {
