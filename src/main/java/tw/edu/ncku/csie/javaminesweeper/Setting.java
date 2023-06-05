@@ -39,8 +39,8 @@ public class Setting {
     @FXML
     public void initialize() {
         flag_button.setSelected(defaultClick);
-        easyDig_button.setSelected((easyDig));
-        easyFlag_button.setSelected((easyFlag));
+        easyDig_button.setSelected(easyDig);
+        easyFlag_button.setSelected(easyFlag);
     }
 
     @FXML
