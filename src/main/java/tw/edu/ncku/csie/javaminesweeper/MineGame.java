@@ -91,6 +91,7 @@ public class MineGame extends Pane {
                 }
             }
         }
+        setBombCount(this.bombCount);
         for (int y = 0; y < Y_TILES; y++) {
             for (int x = 0; x < X_TILES; x++) {
                 Tile tile = grid[x][y];
@@ -242,7 +243,7 @@ public class MineGame extends Pane {
                 openedCount++;
                 startTimer();
             }
-            if (this.isFlag.get() || isDone) {
+            if (this.isOpen || isDone) {
                 return;
             }
             if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && !this.isFlag.get()) {
@@ -357,5 +358,11 @@ public class MineGame extends Pane {
         int remainingSeconds = seconds % 60;
         String timeString = String.format("%02d:%02d", minutes, remainingSeconds);
         this.timerLabel.setText(timeString);
+    }
+
+    private void setBombCount(int bombCount) {
+        BorderPane parent = (BorderPane) getParent();
+        Label bombLabel = (Label) parent.lookup("#bombCount");
+        bombLabel.setText(Integer.toString(bombCount));
     }
 }

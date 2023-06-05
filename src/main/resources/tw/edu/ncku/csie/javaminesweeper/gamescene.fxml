@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tw.edu.ncku.csie.javaminesweeper.GameSceneController">
     <top>
@@ -19,7 +20,7 @@
                 <Region prefHeight="200.0" prefWidth="200.0" />
                 <Label fx:id="timerLabel" alignment="CENTER" minWidth="40.0" text="Time" />
                 <Region prefHeight="200.0" prefWidth="200.0" />
-                <MFXButton text="">
+                <MFXButton onMouseClicked="#onSettingClicked" text="">
                     <graphic>
                         <MFXFontIcon description="fas-gear" />
                     </graphic>
@@ -28,13 +29,25 @@
         </HBox>
     </top>
     <bottom>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0" BorderPane.alignment="CENTER">
             <children>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <MFXFontIcon description="fas-bomb" size="20" />
+                  <Label fx:id="bombCount" text="0" />
+               </children>
+            </VBox>
                 <MFXButton onMouseClicked="#handleRestartButton" text="">
                     <graphic>
                         <MFXFontIcon description="fas-arrow-rotate-left" size="32" />
                     </graphic>
                 </MFXButton>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+               <children>
+                  <MFXFontIcon description="fas-align-justify" size="20" />
+                  <Label text="Label" />
+               </children>
+            </VBox>
             </children>
         </HBox>
     </bottom>
