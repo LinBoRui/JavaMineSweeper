@@ -29,7 +29,7 @@ public class StartSceneController {
 //        p.setPrefSize(600, 600);
         p.setStyle("-fx-background-color: white");
         Main.addNode(p);
-        m.setBombCount(10 + Level.getLevelInt() * 40);
+        m.setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
 
 
 //        rootPane.getChildren().add(p);

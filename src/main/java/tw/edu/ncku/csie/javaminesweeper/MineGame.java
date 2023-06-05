@@ -55,7 +55,7 @@ public class MineGame extends Pane {
             }
             case MEDIUM -> {
                 TILE_SIZE = 25;
-                bombCount = 50;
+                bombCount = 40;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
@@ -80,7 +80,6 @@ public class MineGame extends Pane {
     private void createBomb(int initX, int initY) {
         int bombPlaced = 0;
         Random random = new Random();
-        setBombCount(bombCount);
 
         while (bombPlaced < bombCount) {
             int x = random.nextInt(X_TILES);
