@@ -32,6 +32,7 @@ public class MineGame extends Pane {
 
     private Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private ArrayList<Tile> bombs = new ArrayList<>();
+    private ArrayList<Tile> flags = new ArrayList<>();
     private boolean init = false;
     private boolean isDone = false;
     private int bombCount = 0;
@@ -179,7 +180,7 @@ public class MineGame extends Pane {
             this.icon = new MFXFontIcon("fas-0");
             this.icon.setVisible(false);
             this.button = new MFXButton("", this.flagIcon);
-            this.button.setStyle("-fx-background-color: gray");
+            this.button.setStyle("-fx-background-color: MediumPurple");
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
             this.button.setPrefSize(this.size, this.size);
             this.button.setMaxSize(this.size, this.size);
@@ -244,7 +245,7 @@ public class MineGame extends Pane {
             this.button = new MFXButton("", p);
 //            this.button = new MFXButton("", this.icon);
             this.button.setOnMouseClicked(this::open);
-            this.button.setStyle("-fx-background-color: gray");
+            this.button.setStyle("-fx-background-color: MediumPurple");
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
             this.button.setPrefSize(this.size, this.size);
             this.button.setMaxSize(this.size, this.size);
@@ -260,7 +261,7 @@ public class MineGame extends Pane {
             StackPane p = new StackPane(this.flagIcon, this.icon);
             this.button = new MFXButton("", p);
             this.button.setOnMouseClicked(this::open);
-            this.button.setStyle("-fx-background-color: gray");
+            this.button.setStyle("-fx-background-color: MediumPurple");
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
             this.button.setPrefSize(this.size, this.size);
             this.button.setMaxSize(this.size, this.size);
@@ -276,8 +277,8 @@ public class MineGame extends Pane {
                     if (!i.isFlag.get() && i.type == TileType.BOMB) {
                         stopTimer();
                         i.icon.setVisible(true);
-                        i.button.setStyle("-fx-background-color: red;");
                         showBombs();
+                        i.button.setStyle("-fx-background-color: red;");
                         i.isOpen = true;
                         isDone = true;
                     }
@@ -292,6 +293,8 @@ public class MineGame extends Pane {
                     if (!i.isOpen && !i.isFlag.get()) {
                         i.isFlag.set(true);
                         flagCount++;
+                        flags.add(i);
+                        i.button.setStyle("-fx-background-color: LightGray;");
                         setBombCount(bombCount-flagCount);
                     }
                 }
@@ -301,6 +304,7 @@ public class MineGame extends Pane {
         public void open(MouseEvent e) {
 //            System.out.println(this.type);
             if (!init) {
+                if (e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick()) return;
                 init = true;
                 createBomb(this.x, this.y);
                 startTimer();
@@ -338,8 +342,8 @@ public class MineGame extends Pane {
                     case BOMB -> {
                         stopTimer();
                         this.icon.setVisible(true);
-                        this.button.setStyle("-fx-background-color: red;");
                         showBombs();
+                        this.button.setStyle("-fx-background-color: red;");
 //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
                         isDone = true;
@@ -349,7 +353,16 @@ public class MineGame extends Pane {
             else if ((e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick())) {
                 if (!this.isOpen) {
                     this.isFlag.set(!this.isFlag.get());
-                    flagCount += this.isFlag.get()? 1 : -1;
+                    if (this.isFlag.get()) {
+                        flagCount++;
+                        flags.add(this);
+                        this.button.setStyle("-fx-background-color: LightGray;");
+                    }
+                    else {
+                        flagCount--;
+                        flags.remove(this);
+                        this.button.setStyle("-fx-background-color: MediumPurple;");
+                    }
                     setBombCount(bombCount-flagCount);
                 }
             }
@@ -392,10 +405,11 @@ public class MineGame extends Pane {
     }
 
     public void showBombs() {
+        for (Tile i : flags) {
+            i.isFlag.set(false);
+        }
         for (Tile i : this.bombs) {
             i.icon.setVisible(true);
-            i.button.setStyle("-fx-background-color: red;");
-//                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
             i.isOpen = true;
         }
     }
