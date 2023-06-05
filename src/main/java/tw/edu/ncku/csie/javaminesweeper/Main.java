@@ -25,6 +25,7 @@ public class Main extends Application {
             rootPane.getChildren().add(node);
             this.rootScene = new Scene(rootPane);
             MFXThemeManager.addOn(this.rootScene, Themes.DEFAULT);
+            stage.setTitle("Mine Sweeper");
             stage.setScene(this.rootScene);
             stage.show();
         } catch (IOException e) {

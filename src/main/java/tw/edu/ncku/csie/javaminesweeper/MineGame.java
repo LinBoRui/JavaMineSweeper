@@ -5,9 +5,10 @@ import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.Scene;
+import javafx.concurrent.Task;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -30,7 +31,6 @@ public class MineGame extends Pane {
 
     private Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private ArrayList<Tile> bombs = new ArrayList<>();
-    private Scene scene;
     private boolean init = false;
     private boolean isDone = false;
     private int bombCount = 0;
@@ -43,35 +43,67 @@ public class MineGame extends Pane {
 
 
     MineGame() {
-        setMaxSize(W, H);
-        switch (Level.currLevel) {
-            case EASY -> {
-                TILE_SIZE = 40;
-                X_TILES = W / TILE_SIZE;
-                Y_TILES = H / TILE_SIZE;
-                grid = new Tile[X_TILES][Y_TILES];
+        Task<int[]> task = new Task<int[]>() {
+            @Override
+            public int[] call() {
+                setMaxSize(W, H);
+                switch (Level.currLevel) {
+                    case EASY -> {
+                        TILE_SIZE = 40;
+                        X_TILES = W / TILE_SIZE;
+                        Y_TILES = H / TILE_SIZE;
+                        grid = new Tile[X_TILES][Y_TILES];
+                    }
+                    case MEDIUM -> {
+                        TILE_SIZE = 25;
+                        X_TILES = W / TILE_SIZE;
+                        Y_TILES = H / TILE_SIZE;
+                        grid = new Tile[X_TILES][Y_TILES];
+                    }
+                    case HARD -> {
+                        TILE_SIZE = 20;
+                        X_TILES = W / TILE_SIZE;
+                        Y_TILES = H / TILE_SIZE;
+                        grid = new Tile[X_TILES][Y_TILES];
+                    }
+                }
+                for (int y = 0; y < Y_TILES; y++) {
+                    for (int x = 0; x < X_TILES; x++) {
+                        Tile tile = new Tile(x, y, TILE_SIZE);
+                        grid[x][y] = tile;
+                        updateValue(new int[]{x, y});
+                    }
+                }
+                return null;
             }
-            case MEDIUM -> {
-                TILE_SIZE = 25;
-                X_TILES = W / TILE_SIZE;
-                Y_TILES = H / TILE_SIZE;
-                grid = new Tile[X_TILES][Y_TILES];
+        };
+        task.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                for (int y = 0; y < Y_TILES; y++) {
+                    for (int x = 0; x < X_TILES; x++) {
+                        grid[x][y].setDisable(false);
+                    }
+                }
+                return;
             }
-            case HARD -> {
-                TILE_SIZE = 20;
-                X_TILES = W / TILE_SIZE;
-                Y_TILES = H / TILE_SIZE;
-                grid = new Tile[X_TILES][Y_TILES];
+            int[] oldloc = (oldValue != null)? (int[]) oldValue : new int[]{-1, 0};
+            int[] newloc = (int[]) newValue;
+            for (int i = oldloc[1]; i <= newloc[1]; i++) {
+                for (int j = 0; j < X_TILES; j++) {
+                    if (i == oldloc[1] && j <= oldloc[0])
+                        continue;
+                    else if (i == newloc[1] && j > newloc[0])
+                        break;
+                    grid[j][i].setDisable(true);
+                    getChildren().add(grid[j][i]);
+                }
             }
-        }
-        for (int y = 0; y < Y_TILES; y++) {
-            for (int x = 0; x < X_TILES; x++) {
-                Tile tile = new Tile(x, y, TILE_SIZE);
-                grid[x][y] = tile;
-                getChildren().add(tile);
-            }
-        }
+        });
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
+
 
     private void createBomb(int initX, int initY) {
         for (int y = 0; y < Y_TILES; y++) {
@@ -102,8 +134,8 @@ public class MineGame extends Pane {
     public List<Tile> getNeighbors(Tile tile) {
         List<Tile> neighbors = new ArrayList<>();
 
-        int[] xNext = new int[]{1, -1, 0, 0, 1, -1, -1, 1};
-        int[] yNext = new int[]{0, 0, 1, -1, 1, 1, -1, -1};
+        int[] xNext = new int[]{-1, 0, 1, 1, 1, 0, -1, -1};
+        int[] yNext = new int[]{1, 1, 1, 0, -1, -1, -1, 0};
         for (int i = 0; i < 8; i++) {
             int newX = tile.x + xNext[i];
             int newY = tile.y + yNext[i];
@@ -287,7 +319,7 @@ public class MineGame extends Pane {
 //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
                         openedCount++;
-                        dfs(this.x, this.y);
+                        bfs(this.x, this.y);
                     }
                     case NUM -> {
                         this.icon.setVisible(true);
@@ -337,12 +369,12 @@ public class MineGame extends Pane {
                     case NUM, BOMB -> {
                         this.icon.setVisible(true);
                         this.button.setStyle("-fx-background-color: white;");
-//                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                        //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
                     }
                     case NONE -> {
                         this.button.setStyle("-fx-background-color: white;");
-//                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+                        //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
                         dfs(this.x, this.y);
                     }
@@ -376,6 +408,41 @@ public class MineGame extends Pane {
                 i.toggle();
             }
         }
+    }
+
+    public void bfs(int x, int y) {
+        Thread thread = new Thread(() -> {
+            List<Tile> openList = getNeighbors(this.grid[x][y]);
+            Runnable updater = () -> {
+                while (openList.size() > 0) {
+                    Tile t = openList.remove(0);
+                    if (!t.isOpen && !t.isFlag.get()) {
+                        openedCount++;
+                        t.isOpen = true;
+                        t.button.setStyle("-fx-background-color: white;");
+                        if (t.type == Tile.TileType.NUM) {
+                            t.icon.setVisible(true);
+                        }
+                        if (t.type == Tile.TileType.NONE) {
+                            List<Tile> tmp = getNeighbors(t);
+                            openList.addAll(tmp);
+                        }
+                    }
+                }
+            };
+
+            while (openList.size() > 0) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Platform.runLater(updater);
+            }
+
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     public void startTimer() {

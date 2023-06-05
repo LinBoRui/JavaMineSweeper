@@ -38,7 +38,7 @@
                   <Insets bottom="5.0" left="30.0" right="30.0" top="5.0" />
                </VBox.margin>
             </VBox>
-            <MFXButton fx:id="rankButton" alignment="CENTER" depthLevel="LEVEL1" minHeight="30.0" onAction="#goMenu" prefWidth="120.0" text="Got it!" textAlignment="CENTER">
+            <MFXButton fx:id="rankButton" alignment="CENTER" depthLevel="LEVEL1" minHeight="30.0" onAction="#rankButtonClick" prefWidth="120.0" text="Got it!" textAlignment="CENTER">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin></MFXButton>
