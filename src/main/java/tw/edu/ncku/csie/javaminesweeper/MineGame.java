@@ -315,11 +315,11 @@ public class MineGame extends Pane {
             if (this.isOpen) {
                 if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && this.type == TileType.NUM) {
                     List<Tile> l = getNeighbors(this);
-                    if (Setting.isEasyDig()) {
-                        easyDig(l);
-                    }
                     if (Setting.isEasyFlag()) {
                         easyFlag(l);
+                    }
+                    if (Setting.isEasyDig()) {
+                        easyDig(l);
                     }
                 }
             }
