@@ -20,6 +20,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MineGame extends Pane {
     private static int TILE_SIZE = 40;
@@ -47,18 +48,21 @@ public class MineGame extends Pane {
         switch (Level.currLevel) {
             case EASY -> {
                 TILE_SIZE = 40;
+                bombCount = 10;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
             }
             case MEDIUM -> {
                 TILE_SIZE = 25;
+                bombCount = 40;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
             }
             case HARD -> {
                 TILE_SIZE = 20;
+                bombCount = 90;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
@@ -74,16 +78,19 @@ public class MineGame extends Pane {
     }
 
     private void createBomb(int initX, int initY) {
-        for (int y = 0; y < Y_TILES; y++) {
-            for (int x = 0; x < X_TILES; x++) {
-                if (x != initX && y != initY && x != (initX + 1) && x != (initX - 1) && y != (initY + 1) && y != (initY - 1) && Math.random() < 0.1) {
-                    this.bombCount++;
-                    this.grid[x][y].addBombToButton();
-                    this.bombs.add(this.grid[x][y]);
-                }
+        int bombPlaced = 0;
+        Random random = new Random();
+
+        while (bombPlaced < bombCount) {
+            int x = random.nextInt(X_TILES);
+            int y = random.nextInt(Y_TILES);
+            if (grid[x][y].type != Tile.TileType.BOMB && !(Math.abs(x - initX) <= 1 && Math.abs(y - initY) <= 1)) {
+                this.grid[x][y].addBombToButton();
+                this.bombs.add(this.grid[x][y]);
+                bombPlaced++;
             }
         }
-        setBombCount(this.bombCount);
+
         for (int y = 0; y < Y_TILES; y++) {
             for (int x = 0; x < X_TILES; x++) {
                 Tile tile = grid[x][y];
@@ -405,7 +412,7 @@ public class MineGame extends Pane {
         this.timerLabel.setText(timeString);
     }
 
-    private void setBombCount(int bombCount) {
+    public void setBombCount(int bombCount) {
         BorderPane parent = (BorderPane) getParent();
         Label bombLabel = (Label) parent.lookup("#bombCount");
         bombLabel.setText(Integer.toString(bombCount));

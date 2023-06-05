@@ -24,10 +24,13 @@ public class StartSceneController {
     @FXML
     protected void handleStartGameButton() throws IOException {
         BorderPane p = (BorderPane) Main.loadFxml("gamescene");
-        p.setCenter(new MineGame());
+        MineGame m = new MineGame();
+        p.setCenter(m);
 //        p.setPrefSize(600, 600);
         p.setStyle("-fx-background-color: white");
         Main.addNode(p);
+        m.setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
+
 
 //        rootPane.getChildren().add(p);
     }
