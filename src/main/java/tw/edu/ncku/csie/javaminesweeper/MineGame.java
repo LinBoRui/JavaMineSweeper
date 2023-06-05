@@ -42,7 +42,7 @@ public class MineGame extends Pane {
 
 
     MineGame() {
-        setPrefSize(W, H);
+        setMaxSize(W, H);
 
 
         for (int y = 0; y < Y_TILES; y++) {
@@ -55,18 +55,18 @@ public class MineGame extends Pane {
     }
 
     MineGame(int difficulty) {
-        setPrefSize(W, H);
+        setMaxSize(W, H);
         switch (difficulty) {
             case 0 -> {
             }
             case 1 -> {
-                TILE_SIZE = 20;
+                TILE_SIZE = 25;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
             }
             case 2 -> {
-                TILE_SIZE = 10;
+                TILE_SIZE = 20;
                 X_TILES = W / TILE_SIZE;
                 Y_TILES = H / TILE_SIZE;
                 grid = new Tile[X_TILES][Y_TILES];
@@ -153,32 +153,52 @@ public class MineGame extends Pane {
             this.button.setOnMouseClicked(this::open);
 
             this.flagIcon.visibleProperty().bind(this.isFlag);
+//            this.flagIcon.setSize(this.size);
 
             this.setStyle("-fx-background-color: gray");
 //            this.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
             Color lineColor = Color.WHITE;
-            double lineWidth = 2.0;
+            double lineWidth = 1.0;
             Line topLine = new Line();
             topLine.setStartX(0);
             topLine.setStartY(0);
-            topLine.setEndX(TILE_SIZE - 10);
+            topLine.setEndX(TILE_SIZE - TILE_SIZE / 4.0);
             topLine.setEndY(0);
             topLine.setStroke(lineColor);
             topLine.setStrokeWidth(lineWidth);
-            topLine.setTranslateY(20);
+            topLine.setTranslateY(TILE_SIZE / 2.0);
 
             Line rightLine = new Line();
             rightLine.setStartX(0);
             rightLine.setStartY(0);
             rightLine.setEndX(0);
-            rightLine.setEndY(TILE_SIZE - 10);
+            rightLine.setEndY(TILE_SIZE - TILE_SIZE / 4.0);
             rightLine.setStroke(lineColor);
             rightLine.setStrokeWidth(lineWidth);
-            rightLine.setTranslateX(20);
+            rightLine.setTranslateX(TILE_SIZE / 2.0);
             setTranslateX(x * TILE_SIZE);
             setTranslateY(y * TILE_SIZE);
 
-            this.getChildren().addAll(this.button, topLine, rightLine);
+            Line bottomLine = new Line();
+            bottomLine.setStartX(0);
+            bottomLine.setStartY(TILE_SIZE);
+            bottomLine.setEndX(TILE_SIZE - TILE_SIZE / 4.0);
+            bottomLine.setEndY(TILE_SIZE);
+            bottomLine.setStroke(lineColor);
+            bottomLine.setStrokeWidth(lineWidth);
+            bottomLine.setTranslateY(-(TILE_SIZE / 2.0));
+
+            Line leftLine = new Line();
+            leftLine.setStartX(TILE_SIZE);
+            leftLine.setStartY(0);
+            leftLine.setEndX(TILE_SIZE);
+            leftLine.setEndY(TILE_SIZE - TILE_SIZE / 4.0);
+            leftLine.setStroke(lineColor);
+            leftLine.setStrokeWidth(lineWidth);
+            leftLine.setTranslateX(-(TILE_SIZE / 2.0));
+            setTranslateX(x * TILE_SIZE);
+            setTranslateY(y * TILE_SIZE);
+            this.getChildren().addAll(this.button, topLine, rightLine, bottomLine, leftLine);
 
         }
 

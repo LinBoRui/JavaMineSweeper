@@ -13,13 +13,13 @@
         <MFXFontIcon description="fas-gear" size="100.0" />
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
             <children>
-                <MFXButton text="">
+                <MFXButton onMouseClicked="#handleChangeDifficultyLeft" text="">
                     <graphic>
                         <MFXFontIcon description="fas-angle-left" />
                     </graphic>
                 </MFXButton>
-                <Label text="Easy" />
-                <MFXButton text="">
+                <Label fx:id="difficultyLabel" text="Easy" />
+                <MFXButton onMouseClicked="#handleChangeDifficultyRight" text="">
                     <graphic>
                         <MFXFontIcon description="fas-angle-right" />
                     </graphic>
