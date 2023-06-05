@@ -5,7 +5,6 @@ import io.github.palexdev.materialfx.controls.MFXSlider;
 import io.github.palexdev.materialfx.controls.MFXToggleButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -38,12 +37,16 @@ public class Setting {
     private MFXSlider delay_slider;
 
     @FXML
+    public void initialize() {
+        flag_button.setSelected(getDefaultClick());
+    }
+
+    @FXML
     protected void easyDigButtonHandler() {
         if (easyDig_button.isSelected()) {
             easyDig_button.setText("On");
             easyDig = true;
-        }
-        else {
+        } else {
             easyDig_button.setText("Off");
             easyDig = false;
         }
@@ -54,8 +57,7 @@ public class Setting {
         if (easyFlag_button.isSelected()) {
             easyFlag_button.setText("On");
             easyFlag = true;
-        }
-        else {
+        } else {
             easyFlag_button.setText("Off");
             easyFlag = false;
         }
@@ -65,8 +67,7 @@ public class Setting {
     protected void onDefaultToggle() {
         if (dig_button.isSelected()) {
             defaultClick = false;
-        }
-        else if (flag_button.isSelected()) {
+        } else if (flag_button.isSelected()) {
             defaultClick = true;
         }
     }
