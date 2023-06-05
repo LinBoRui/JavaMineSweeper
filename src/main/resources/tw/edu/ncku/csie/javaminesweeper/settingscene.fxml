@@ -42,7 +42,7 @@
             </font>
         </Text>
         <MFXToggleButton fx:id="easyFlag_button" alignment="CENTER" onMouseClicked="#easyFlagButtonHandler" text="Off" />
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Default left click action">
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Default left-click action">
             <font>
                 <Font name="Microsoft YaHei" size="14.0" />
             </font>
