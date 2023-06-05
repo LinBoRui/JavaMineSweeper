@@ -2,11 +2,20 @@ package tw.edu.ncku.csie.javaminesweeper;
 
 import java.util.List;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class RankSceneController {
+
+    @FXML
+    FlowPane rankPane;
 
     @FXML
     Label difficultyLabel;
@@ -16,6 +25,7 @@ public class RankSceneController {
 
     @FXML
     public void initialize() {
+        rankPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.3), CornerRadii.EMPTY, Insets.EMPTY)));
         difficultyLabel.setText("Difficulty: " + Level.getLevelString());
         List<RankItem> rankList = Rank.getRankList();
         rankListVBox.getChildren().clear();
