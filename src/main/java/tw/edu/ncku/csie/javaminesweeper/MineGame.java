@@ -34,6 +34,7 @@ public class MineGame extends Pane {
     private boolean init = false;
     private boolean isDone = false;
     private int bombCount = 0;
+    private int flagCount = 0;
     private int openedCount = 0;
 
     private int seconds = 0;
@@ -129,6 +130,7 @@ public class MineGame extends Pane {
 
         private MFXButton button;
         private MFXFontIcon icon;
+        private int number;
         private double size;
         private BooleanProperty isFlag = new SimpleBooleanProperty(false);
         //        private boolean isFlag = false;
@@ -205,6 +207,7 @@ public class MineGame extends Pane {
 
         public void addNumberToButton(int number) {
             this.type = TileType.NUM;
+            this.number = number;
             this.icon = new MFXFontIcon(String.format("fas-%d", number));
             this.icon.setVisible(false);
             StackPane p = new StackPane(this.flagIcon, this.icon);
@@ -235,6 +238,36 @@ public class MineGame extends Pane {
             this.getChildren().set(0, this.button);
         }
 
+        public void easyDig(Tile tile, List<Tile> l) {
+            int flagCount = (int) l.stream().filter(tile1 -> tile1.isFlag.get()).count();
+            if (this.number == flagCount) {
+                dfs(this.x, this.y);
+                for (Tile i : l) {
+                    if (!i.isFlag.get() && i.type == TileType.BOMB) {
+                        stopTimer();
+                        i.icon.setVisible(true);
+                        i.button.setStyle("-fx-background-color: red;");
+                        showBombs();
+                        i.isOpen = true;
+                        isDone = true;
+                    }
+                }
+            }
+        }
+
+        public void easyFlag(Tile tile, List<Tile> l) {
+            int blankCount = (int) l.stream().filter(tile1 -> !tile1.isOpen).count();
+            if (this.number == blankCount) {
+                for (Tile i : l) {
+                    if (!i.isOpen && !i.isFlag.get()) {
+                        i.isFlag.set(true);
+                        flagCount++;
+                        setBombCount(bombCount-flagCount);
+                    }
+                }
+            }
+        }
+
         public void open(MouseEvent e) {
 //            System.out.println(this.type);
             if (!init) {
@@ -243,10 +276,21 @@ public class MineGame extends Pane {
                 openedCount++;
                 startTimer();
             }
-            if (this.isOpen || isDone) {
+            if (isDone) {
                 return;
             }
-            if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && !this.isFlag.get()) {
+            if (this.isOpen) {
+                if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && this.type == TileType.NUM) {
+                    List<Tile> l = getNeighbors(this);
+                    if (Setting.isEasyDig()) {
+                        easyDig(this, l);
+                    }
+                    if (Setting.isEasyFlag()) {
+                        easyFlag(this, l);
+                    }
+                }
+            }
+            else if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && !this.isFlag.get()) {
                 switch (this.type) {
                     case NONE -> {
                         this.button.setStyle("-fx-background-color: white;");
@@ -262,6 +306,7 @@ public class MineGame extends Pane {
                         openedCount++;
                     }
                     case BOMB -> {
+                        stopTimer();
                         this.icon.setVisible(true);
                         this.button.setStyle("-fx-background-color: red;");
                         showBombs();
@@ -271,14 +316,22 @@ public class MineGame extends Pane {
                     }
                 }
             }
-            if ((e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick())) {
+            else if ((e.getButton() == MouseButton.SECONDARY ^ Setting.getDefaultClick())) {
                 if (!this.isOpen) {
                     this.isFlag.set(!this.isFlag.get());
+                    flagCount += this.isFlag.get()? 1 : -1;
+                    setBombCount(bombCount-flagCount);
                 }
             }
             if ((X_TILES * Y_TILES) - openedCount == bombCount) {
                 System.out.println("done!!!");
                 stopTimer();
+                for (Tile i:bombs) {
+                    if (!i.isFlag.get()) {
+                        i.isFlag.set(true);
+                    }
+                }
+                setBombCount(0);
                 System.out.println(getTime());
                 isDone = true;
             }

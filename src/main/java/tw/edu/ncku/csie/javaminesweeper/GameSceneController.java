@@ -26,6 +26,7 @@ public class GameSceneController {
         MineGame prev = (MineGame) this.root.getCenter();
         if (prev.getInit()) {
             prev.stopTimer();
+            setBombCount(0);
         }
         this.root.setCenter(new MineGame());
     }
