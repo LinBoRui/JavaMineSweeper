@@ -282,11 +282,13 @@ public class MineGame extends Pane {
                     if (!i.isFlag.get() && i.type == TileType.BOMB) {
                         stopTimer();
                         i.icon.setVisible(true);
-                        showBombs();
                         i.button.setStyle("-fx-background-color: red;");
                         i.isOpen = true;
                         isDone = true;
                     }
+                }
+                if (isDone) {
+                    showBombs();
                 }
             }
         }
@@ -483,7 +485,6 @@ public class MineGame extends Pane {
     }
 
     public void stopTimer() {
-        this.timerLabel.setText("Timer");
         this.timeline.stop();
     }
 
