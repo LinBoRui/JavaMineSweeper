@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.mfxresources.fonts.MFXFontIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<FlowPane fx:id="rootPane" alignment="CENTER" columnHalignment="CENTER" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tw.edu.ncku.csie.javaminesweeper.AuthorSceneController">
+   <children>
+      <VBox fx:id="authorVBox" alignment="TOP_CENTER" maxHeight="300.0" maxWidth="300.0" prefHeight="300.0" prefWidth="300.0" style="-fx-background-color: white;" stylesheets="@../css/authorscene.css">
+         <children>
+            <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/ncku-logo1.jpg" />
+               </image>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
+            </ImageView>
+            <Label text="v0.1.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </Label>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label text="盧湧恩" />
+                  <MFXFontIcon onMouseClicked="#handleAuthor1Button" description="fas-link" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label text="陳均哲" />
+                  <MFXFontIcon onMouseClicked="#handleAuthor2Button" description="fas-link" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label text="林柏叡" />
+                  <MFXFontIcon onMouseClicked="#handleAuthor3Button" description="fas-link" />
+               </children>
+            </HBox>
+            <MFXButton fx:id="authorButton" onMouseClicked="#handleBackButton" text="Back">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </MFXButton>
+         </children>
+      </VBox>
+   </children>
+</FlowPane>

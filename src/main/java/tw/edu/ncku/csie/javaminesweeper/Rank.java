@@ -1,12 +1,6 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +20,7 @@ public class Rank implements Serializable {
 
     private static void loadFile() {
         try (ObjectInputStream ois =
-                new ObjectInputStream(new FileInputStream(new File(RANK_FILE)))) {
+                     new ObjectInputStream(new FileInputStream(new File(RANK_FILE)))) {
             ranking = (Map<Level, List<RankItem>>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             initialRanking();
@@ -35,7 +29,7 @@ public class Rank implements Serializable {
 
     private static void saveFile() {
         try (ObjectOutputStream oos =
-                new ObjectOutputStream(new FileOutputStream(new File(RANK_FILE)))) {
+                     new ObjectOutputStream(new FileOutputStream(new File(RANK_FILE)))) {
             oos.writeObject(ranking);
             oos.flush();
             oos.close();
@@ -76,6 +70,9 @@ public class Rank implements Serializable {
     }
 
     public static void showRanking() {
+        if (ranking == null) {
+            loadFile();
+        }
         try {
             Main.addFxml("RankScene");
         } catch (IOException e) {

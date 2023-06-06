@@ -42,4 +42,9 @@ public class GameSceneController {
     public void setBombCount(int number) {
         bombCount.setText(Integer.toString(number));
     }
+
+    @FXML
+    protected void handleScoreBoardButton() {
+        Rank.showRanking();
+    }
 }

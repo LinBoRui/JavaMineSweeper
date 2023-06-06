@@ -28,7 +28,7 @@ public class StartSceneController {
 //        p.setPrefSize(600, 600);
         p.setStyle("-fx-background-color: white");
         Main.addNode(p);
-        m.setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
+        m.setBombCount((int) Math.pow(Level.getLevelInt() + 1, 2) * 10);
 
 
 //        rootPane.getChildren().add(p);
@@ -51,5 +51,15 @@ public class StartSceneController {
     protected void handleChangeDifficultyRight() {
         Level.changeLevel(1);
         difficultyLabel.setText(Level.getLevelString());
+    }
+
+    @FXML
+    protected void handleScoreBoardButton() {
+        Rank.showRanking();
+    }
+
+    @FXML
+    protected void handleAuthorButton() throws IOException {
+        Main.addFxml("authorscene");
     }
 }

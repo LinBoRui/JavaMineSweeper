@@ -45,9 +45,16 @@
                       <MFXFontIcon description="fas-gear" />
                </graphic>
             </MFXButton>
-                <MFXFontIcon description="fas-align-left" />
-                <MFXFontIcon description="fas-align-left" />
-                <MFXFontIcon description="fas-circle-info" />
+            <MFXButton onMouseClicked="#handleScoreBoardButton" text="">
+               <graphic>
+                      <MFXFontIcon description="fas-chart-simple" />
+               </graphic>
+            </MFXButton>
+            <MFXButton onMouseClicked="#handleAuthorButton" text="">
+               <graphic>
+                      <MFXFontIcon description="fas-circle-info" />
+               </graphic>
+            </MFXButton>
             </children>
             <VBox.margin>
                 <Insets />
