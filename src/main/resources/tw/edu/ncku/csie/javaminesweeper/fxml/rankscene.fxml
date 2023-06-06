@@ -14,7 +14,7 @@
          <children>
             <Label fx:id="title" alignment="CENTER" text="Great!" textAlignment="CENTER">
                <font>
-                  <Font size="14.0" />
+                  <Font name="Microsoft YaHei" size="14.0" />
                </font>
                <VBox.margin>
                   <Insets left="10.0" right="10.0" top="10.0" />
@@ -24,13 +24,22 @@
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
+               <font>
+                  <Font name="Microsoft YaHei" size="12.0" />
+               </font>
             </Label>
             <VBox fx:id="rankListVBox" alignment="CENTER" prefWidth="120.0">
                <children>
                   <AnchorPane>
                      <children>
-                        <Label text="1. 1 Jan 1960" AnchorPane.leftAnchor="0.0" />
-                        <Label alignment="CENTER_RIGHT" text="114514s" AnchorPane.rightAnchor="0.0" />
+                        <Label text="1. 1 Jan 1960" AnchorPane.leftAnchor="0.0">
+                           <font>
+                              <Font name="Microsoft Tai Le" size="12.0" />
+                           </font></Label>
+                        <Label alignment="CENTER_RIGHT" text="114514s" AnchorPane.rightAnchor="0.0">
+                           <font>
+                              <Font name="Microsoft YaHei" size="12.0" />
+                           </font></Label>
                      </children>
                   </AnchorPane>
                </children>
@@ -41,7 +50,10 @@
             <MFXButton fx:id="rankButton" alignment="CENTER" depthLevel="LEVEL1" minHeight="30.0" onAction="#rankButtonClick" prefWidth="120.0" text="Got it!" textAlignment="CENTER">
                <VBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </VBox.margin></MFXButton>
+               </VBox.margin>
+               <font>
+                  <Font name="Microsoft YaHei" size="12.0" />
+               </font></MFXButton>
          </children>
          <FlowPane.margin>
             <Insets />
