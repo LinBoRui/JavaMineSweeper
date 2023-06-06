@@ -2,6 +2,7 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.mfxresources.fonts.MFXFontIcon?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -37,12 +38,22 @@
             <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <MFXFontIcon description="fas-bomb" size="20" />
+                  <MFXButton text="">
+                     <graphic>
+                        <MFXFontIcon description="fas-bomb" size="20" />
+                     </graphic>
+                  </MFXButton>
                   <Label fx:id="bombCount" text="0">
                      <font>
-                        <Font name="Microsoft YaHei" size="12.0" />
-                     </font></Label>
+                        <Font name="Microsoft YaHei" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="-10.0" />
+                     </VBox.margin></Label>
                </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
             </VBox>
                 <MFXButton onMouseClicked="#handleRestartButton" text="">
                     <graphic>
@@ -58,8 +69,11 @@
                   </MFXButton>
                   <Label text="Score">
                      <font>
-                        <Font name="Microsoft YaHei" size="12.0" />
-                     </font></Label>
+                        <Font name="Microsoft YaHei" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="-10.0" />
+                     </VBox.margin></Label>
                </children>
             </VBox>
             </children>

@@ -20,7 +20,7 @@
                   <Image url="@../image/ncku-logo1.jpg" />
                </image>
                <VBox.margin>
-                  <Insets top="40.0" />
+                  <Insets top="20.0" />
                </VBox.margin>
             </ImageView>
             <Label text="v0.1.0">
@@ -31,14 +31,14 @@
                   <Insets top="10.0" />
                </padding>
                <font>
-                  <Font name="Microsoft YaHei" size="14.0" />
+                  <Font name="Microsoft YaHei" size="18.0" />
                </font>
             </Label>
             <HBox alignment="CENTER">
                <children>
                   <Label text="盧湧恩 ">
                      <font>
-                        <Font name="Microsoft YaHei" size="12.0" />
+                        <Font name="Microsoft YaHei" size="14.0" />
                      </font></Label>
                   <MFXFontIcon description="fas-link" onMouseClicked="#handleAuthor1Button" />
                </children>
@@ -50,7 +50,7 @@
                <children>
                   <Label text="陳均哲 ">
                      <font>
-                        <Font name="Microsoft YaHei" size="12.0" />
+                        <Font name="Microsoft YaHei" size="14.0" />
                      </font></Label>
                   <MFXFontIcon description="fas-link" onMouseClicked="#handleAuthor2Button" />
                </children>
@@ -59,18 +59,25 @@
                <children>
                   <Label text="林柏叡 ">
                      <font>
-                        <Font name="Microsoft YaHei" size="12.0" />
+                        <Font name="Microsoft YaHei" size="14.0" />
                      </font></Label>
                   <MFXFontIcon description="fas-link" onMouseClicked="#handleAuthor3Button" />
                </children>
             </HBox>
-            <MFXButton fx:id="authorButton" onMouseClicked="#handleBackButton" text="Back">
+            <MFXButton fx:id="authorButton" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handleBackButton" prefHeight="30.0" prefWidth="120.0" text="" textAlignment="CENTER">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
                <font>
                   <Font name="Microsoft YaHei" size="12.0" />
                </font>
+               <graphic>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Back" textAlignment="CENTER">
+                     <font>
+                        <Font name="Microsoft YaHei" size="14.0" />
+                     </font>
+                  </Label>
+               </graphic>
             </MFXButton>
          </children>
       </VBox>

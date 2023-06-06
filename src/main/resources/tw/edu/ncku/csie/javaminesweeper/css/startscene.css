@@ -2,13 +2,7 @@
     -border-color: #7e7e7e;
 }
 
-#authorVBox {
-    -fx-background-radius: 15;
-    -fx-border-color: -border-color;
-    -fx-border-radius: 15;
-}
-
-#authorButton {
+#startButton {
     -fx-background-radius: 20;
     -fx-border-color: -border-color;
     -fx-border-radius: 20;
