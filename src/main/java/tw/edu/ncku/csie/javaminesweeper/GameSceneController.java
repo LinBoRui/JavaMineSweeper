@@ -13,6 +13,8 @@ import java.io.IOException;
 
 public class GameSceneController {
 
+    NumberBinding size;
+
     @FXML
     private BorderPane root;
 
@@ -24,14 +26,12 @@ public class GameSceneController {
 
     @FXML
     private void initialize() {
-        MineGame m = new MineGame();
+        size = Bindings.min(root.widthProperty().multiply(0.9), root.heightProperty().add(topHBox.heightProperty().add(bottomHBox.heightProperty()).multiply(-1)));
+        MineGame m = new MineGame(size);
         root.setCenter(m);
         // root.setPrefSize(600, 600);
         root.setStyle("-fx-background-color: white");
-        m.setBombCount((int) Math.pow(Level.getLevelInt() + 1, 2) * 10);
-        NumberBinding size = Bindings.min(root.widthProperty().multiply(0.9), root.heightProperty().add(topHBox.heightProperty().add(bottomHBox.heightProperty()).multiply(-1)));
-        m.maxHeightProperty().bind(size);
-        m.maxWidthProperty().bind(size);
+        setBombCount((int) Math.pow(Level.getLevelInt() + 1, 2) * 10);
     }
 
     @FXML
@@ -42,10 +42,13 @@ public class GameSceneController {
     @FXML
     protected void handleRestartButton() {
         MineGame prev = (MineGame) this.root.getCenter();
+        if (prev.isCreating) {
+            prev.createThread.interrupt();
+        }
         if (prev.getInit()) {
             prev.stopTimer();
         }
-        this.root.setCenter(new MineGame());
+        this.root.setCenter(new MineGame(size));
         resetTimer();
         setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
     }
