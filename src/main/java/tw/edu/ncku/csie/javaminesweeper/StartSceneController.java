@@ -4,7 +4,6 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -15,6 +14,7 @@ public class StartSceneController {
 
     @FXML
     private Label difficultyLabel;
+
     @FXML
     private MFXButton leftArrow, rightArrow;
 
@@ -25,16 +25,7 @@ public class StartSceneController {
 
     @FXML
     protected void handleStartGameButton() throws IOException {
-        BorderPane p = (BorderPane) Main.loadFxml("gamescene");
-        MineGame m = new MineGame();
-        p.setCenter(m);
-//        p.setPrefSize(600, 600);
-        p.setStyle("-fx-background-color: white");
-        Main.addNode(p);
-        m.setBombCount(m.getTotalBomb());
-
-
-//        rootPane.getChildren().add(p);
+        Main.addFxml("gamescene");
     }
 
     @FXML
