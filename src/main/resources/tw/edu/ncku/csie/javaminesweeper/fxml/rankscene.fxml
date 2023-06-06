@@ -12,7 +12,7 @@
    <children>
       <VBox fx:id="rankVBox" alignment="CENTER" style="-fx-background-color: white;" stylesheets="@../css/rankscene.css">
          <children>
-            <Label fx:id="title" alignment="CENTER" text="Great!" textAlignment="CENTER">
+            <Label fx:id="title" alignment="CENTER" text="Score" textAlignment="CENTER">
                <font>
                   <Font name="Microsoft YaHei" size="18.0" />
                </font>
