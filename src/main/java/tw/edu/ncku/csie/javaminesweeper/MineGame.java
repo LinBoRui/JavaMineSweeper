@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -177,6 +178,8 @@ public class MineGame extends Pane {
             this.y = y;
             this.size = size;
 
+            this.flagIcon.setSize(size / 2.0);
+
             this.icon = new MFXFontIcon("fas-0");
             this.icon.setVisible(false);
             this.button = new MFXButton("", this.flagIcon);
@@ -184,6 +187,7 @@ public class MineGame extends Pane {
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
             this.button.setPrefSize(this.size, this.size);
             this.button.setMaxSize(this.size, this.size);
+            this.button.setPadding(new Insets(0, 0, 0, 0));
             this.button.setOnMouseClicked(this::open);
 
             this.flagIcon.visibleProperty().bind(this.isFlag);
@@ -210,8 +214,6 @@ public class MineGame extends Pane {
             rightLine.setStroke(lineColor);
             rightLine.setStrokeWidth(lineWidth);
             rightLine.setTranslateX(TILE_SIZE / 2.0);
-            setTranslateX(x * TILE_SIZE);
-            setTranslateY(y * TILE_SIZE);
 
             Line bottomLine = new Line();
             bottomLine.setStartX(0);
@@ -241,8 +243,10 @@ public class MineGame extends Pane {
             this.number = number;
             this.icon = new MFXFontIcon(String.format("fas-%d", number));
             this.icon.setVisible(false);
+            this.icon.setSize(size / 2.0);
             StackPane p = new StackPane(this.flagIcon, this.icon);
             this.button = new MFXButton("", p);
+            this.button.setPadding(new Insets(0, 0, 0, 0));
 //            this.button = new MFXButton("", this.icon);
             this.button.setOnMouseClicked(this::open);
             this.button.setStyle("-fx-background-color: MediumPurple");
@@ -260,6 +264,7 @@ public class MineGame extends Pane {
 
             StackPane p = new StackPane(this.flagIcon, this.icon);
             this.button = new MFXButton("", p);
+            this.button.setPadding(new Insets(0, 0, 0, 0));
             this.button.setOnMouseClicked(this::open);
             this.button.setStyle("-fx-background-color: MediumPurple");
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
