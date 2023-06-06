@@ -7,6 +7,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
@@ -46,11 +47,16 @@ public class MineGame extends Pane {
     private Label timerLabel;
     private Timeline timeline;
 
+    protected boolean isCreating = false;
+    protected Thread createThread;
 
-    MineGame() {
+    MineGame(NumberBinding size) {
+        maxHeightProperty().bind(size);
+        maxWidthProperty().bind(size);
         Task<int[]> task = new Task<int[]>() {
             @Override
             public int[] call() {
+                isCreating = true;
                 switch (Level.currLevel) {
                     case EASY -> {
                         TILE_CNT = 10;
@@ -88,12 +94,15 @@ public class MineGame extends Pane {
             }
         };
         task.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isCreating)
+                return;
             if (newValue == null) {
                 for (int y = 0; y < Y_TILES; y++) {
                     for (int x = 0; x < X_TILES; x++) {
                         grid[x][y].setDisable(false);
                     }
                 }
+                isCreating = false;
                 return;
             }
             int[] oldloc = (oldValue != null)? (int[]) oldValue : new int[]{-1, 0};
@@ -109,9 +118,9 @@ public class MineGame extends Pane {
                 }
             }
         });
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+        createThread = new Thread(task);
+        createThread.setDaemon(true);
+        createThread.start();
     }
 
 
