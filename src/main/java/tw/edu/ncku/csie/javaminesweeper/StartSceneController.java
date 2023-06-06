@@ -1,5 +1,6 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,6 +15,8 @@ public class StartSceneController {
 
     @FXML
     private Label difficultyLabel;
+    @FXML
+    private MFXButton leftArrow, rightArrow;
 
     @FXML
     protected void onHelloButtonClick() {
@@ -43,12 +46,26 @@ public class StartSceneController {
 
     @FXML
     protected void handleChangeDifficultyLeft() {
+        if (Level.getLevelString() == "Easy") {
+            return;
+        }
+        if (Level.getLevelString() == "Medium") {
+            leftArrow.setVisible(false);
+        }
+        rightArrow.setVisible(true);
         Level.changeLevel(2);
         difficultyLabel.setText(Level.getLevelString());
     }
 
     @FXML
     protected void handleChangeDifficultyRight() {
+        if (Level.getLevelString() == "Hard") {
+            return;
+        }
+        if (Level.getLevelString() == "Medium") {
+            rightArrow.setVisible(false);
+        }
+        leftArrow.setVisible(true);
         Level.changeLevel(1);
         difficultyLabel.setText(Level.getLevelString());
     }

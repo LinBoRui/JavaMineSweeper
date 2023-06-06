@@ -2,7 +2,6 @@
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXRadioButton?>
-<?import io.github.palexdev.materialfx.controls.MFXSlider?>
 <?import io.github.palexdev.materialfx.controls.MFXToggleButton?>
 <?import io.github.palexdev.mfxresources.fonts.MFXFontIcon?>
 <?import javafx.geometry.Insets?>
@@ -12,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" cache="true" onDragExited="#onDelaySliderDrag" prefHeight="448.0" prefWidth="391.0" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tw.edu.ncku.csie.javaminesweeper.Setting">
+<VBox alignment="CENTER" cache="true" maxHeight="600.0" maxWidth="400.0" onDragExited="#onDelaySliderDrag" prefHeight="600.0" prefWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tw.edu.ncku.csie.javaminesweeper.Setting">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
     </padding>
@@ -29,24 +28,66 @@
             <font>
                 <Font name="Microsoft YaHei" size="29.0" />
             </font>
+         <VBox.margin>
+            <Insets top="-25.0" />
+         </VBox.margin>
         </Text>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Easy digging">
             <font>
                 <Font name="Microsoft YaHei" size="14.0" />
             </font>
+         <VBox.margin>
+            <Insets top="-5.0" />
+         </VBox.margin>
         </Text>
-        <MFXToggleButton fx:id="easyDig_button" alignment="CENTER" onMouseClicked="#easyDigButtonHandler" text="Off" />
+      <Text fill="GREY" strokeType="OUTSIDE" strokeWidth="0.0" text="Clicking a number will dig all of its surrounding unflagged cells. It will work if the amount of surrounding flagged cells matches the clicked digit." textAlignment="CENTER" wrappingWidth="300.0">
+         <font>
+            <Font name="Microsoft YaHei" size="12.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="-15.0" />
+         </VBox.margin>
+      </Text>
+        <MFXToggleButton fx:id="easyDig_button" alignment="CENTER" onMouseClicked="#easyDigButtonHandler" text="Off">
+         <VBox.margin>
+            <Insets top="-15.0" />
+         </VBox.margin></MFXToggleButton>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Easy flagging">
             <font>
                 <Font name="Microsoft YaHei" size="14.0" />
             </font>
+         <VBox.margin>
+            <Insets top="-5.0" />
+         </VBox.margin>
         </Text>
-        <MFXToggleButton fx:id="easyFlag_button" alignment="CENTER" onMouseClicked="#easyFlagButtonHandler" text="Off" />
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Default left-click action">
+      <Text fill="GREY" strokeType="OUTSIDE" strokeWidth="0.0" text="Clicking a number will flag all of its surrounding closed cells. It will work if the amount of surrounding closed cells matches the clicked digit." textAlignment="CENTER" wrappingWidth="300.0">
+         <font>
+            <Font name="Microsoft YaHei" size="12.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="-15.0" />
+         </VBox.margin>
+      </Text>
+        <MFXToggleButton fx:id="easyFlag_button" alignment="CENTER" onMouseClicked="#easyFlagButtonHandler" text="Off">
+         <VBox.margin>
+            <Insets top="-15.0" />
+         </VBox.margin></MFXToggleButton>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Left-click action">
             <font>
                 <Font name="Microsoft YaHei" size="14.0" />
             </font>
+         <VBox.margin>
+            <Insets top="-5.0" />
+         </VBox.margin>
         </Text>
+      <Text fill="GREY" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose which action is enabled by left-clicking. The other action will be buond to right-click automatically." textAlignment="CENTER" wrappingWidth="250.0">
+         <font>
+            <Font name="Microsoft YaHei" size="12.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="-15.0" />
+         </VBox.margin>
+      </Text>
         <HBox maxWidth="200.0" prefHeight="44.0" prefWidth="200.0">
             <children>
                 <MFXRadioButton fx:id="dig_button" contentDisplay="TOP" contentDisposition="TOP" graphicTextGap="10.0" onMouseClicked="#onDefaultToggle" prefHeight="44.0" prefWidth="100.0" selected="true" text="" viewOrder="-1.0">
@@ -56,28 +97,21 @@
                <graphic>
                    <MFXFontIcon description="fas-person-digging" size="40.0" />
                </graphic>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
                 </MFXRadioButton>
                 <MFXRadioButton fx:id="flag_button" contentDisplay="TOP" contentDisposition="TOP" graphicTextGap="10.0" onMouseClicked="#onDefaultToggle" prefHeight="44.0" prefWidth="100.0" text="" toggleGroup="$haha">
                <graphic>
                    <MFXFontIcon description="fas-flag" size="40.0" />
-               </graphic></MFXRadioButton>
+               </graphic>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></MFXRadioButton>
             </children>
+         <VBox.margin>
+            <Insets top="-10.0" />
+         </VBox.margin>
         </HBox>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Long tap delay">
-            <font>
-                <Font name="Microsoft YaHei" size="14.0" />
-            </font>
-        </Text>
-        <Text fx:id="delay_value" strokeType="OUTSIDE" strokeWidth="0.0" text="150 ms">
-            <font>
-                <Font name="Microsoft YaHei" size="12.0" />
-            </font>
-        </Text>
-        <MFXSlider fx:id="delay_slider" enableKeyboard="false" max="450.0" min="150.0" onMouseClicked="#onDelaySliderDrag" onMouseDragged="#onDelaySliderDrag" prefHeight="4.0" prefWidth="171.0" showTicksAtEdges="false" value="150.0" />
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="150 ms                                      450 ms" wrappingWidth="187.88635396957397">
-            <font>
-                <Font name="Microsoft YaHei" size="10.0" />
-            </font>
-        </Text>
     </children>
 </VBox>

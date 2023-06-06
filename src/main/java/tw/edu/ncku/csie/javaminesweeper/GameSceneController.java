@@ -14,7 +14,7 @@ public class GameSceneController {
     private BorderPane root;
 
     @FXML
-    private Label bombCount;
+    private Label bombCount, timerLabel;
 
     @FXML
     protected void handleBackButton() throws IOException {
@@ -28,6 +28,7 @@ public class GameSceneController {
             prev.stopTimer();
         }
         this.root.setCenter(new MineGame());
+        resetTimer();
         setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
     }
 
@@ -41,6 +42,11 @@ public class GameSceneController {
     @FXML
     public void setBombCount(int number) {
         bombCount.setText(Integer.toString(number));
+    }
+
+    @FXML
+    public void resetTimer() {
+        timerLabel.setText("00:00");
     }
 
     @FXML
