@@ -483,7 +483,6 @@ public class MineGame extends Pane {
     }
 
     public void stopTimer() {
-        this.timerLabel.setText("Timer");
         this.timeline.stop();
     }
 

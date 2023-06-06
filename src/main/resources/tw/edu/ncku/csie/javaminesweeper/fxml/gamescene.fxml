@@ -18,12 +18,12 @@
                         <MFXFontIcon description="fas-arrow-left" />
                     </graphic>
                 </MFXButton>
-                <Region prefHeight="200.0" prefWidth="200.0" />
-                <Label fx:id="timerLabel" alignment="CENTER" minWidth="40.0" text="Time">
+                <Region prefHeight="200.0" prefWidth="90.0" />
+                <Label fx:id="timerLabel" alignment="CENTER" minWidth="40.0" text="00:00">
                <font>
                   <Font name="Microsoft YaHei" size="14.0" />
                </font></Label>
-                <Region prefHeight="200.0" prefWidth="200.0" />
+                <Region prefHeight="200.0" prefWidth="90.0" />
                 <MFXButton onMouseClicked="#onSettingClicked" text="">
                     <graphic>
                         <MFXFontIcon description="fas-gear" />
