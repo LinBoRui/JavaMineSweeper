@@ -30,13 +30,12 @@ public class MineGame extends Pane {
     private static final int H = 400;
     private static int X_TILES = W / TILE_SIZE;
     private static int Y_TILES = H / TILE_SIZE;
-
+    private static int TOTAL_BOMB = 0;
     private Tile[][] grid = new Tile[X_TILES][Y_TILES];
     private ArrayList<Tile> bombs = new ArrayList<>();
     private ArrayList<Tile> flags = new ArrayList<>();
     private boolean init = false;
     private boolean isDone = false;
-    private int bombCount = 0;
     private int flagCount = 0;
     private int openedCount = 0;
 
@@ -53,21 +52,21 @@ public class MineGame extends Pane {
                 switch (Level.currLevel) {
                     case EASY -> {
                         TILE_SIZE = 40;
-                        bombCount = 10;
+                        TOTAL_BOMB = 10;
                         X_TILES = W / TILE_SIZE;
                         Y_TILES = H / TILE_SIZE;
                         grid = new Tile[X_TILES][Y_TILES];
                     }
                     case MEDIUM -> {
                         TILE_SIZE = 25;
-                        bombCount = 40;
+                        TOTAL_BOMB = 40;
                         X_TILES = W / TILE_SIZE;
                         Y_TILES = H / TILE_SIZE;
                         grid = new Tile[X_TILES][Y_TILES];
                     }
                     case HARD -> {
                         TILE_SIZE = 20;
-                        bombCount = 90;
+                        TOTAL_BOMB = 90;
                         X_TILES = W / TILE_SIZE;
                         Y_TILES = H / TILE_SIZE;
                         grid = new Tile[X_TILES][Y_TILES];
@@ -115,7 +114,7 @@ public class MineGame extends Pane {
         int bombPlaced = 0;
         Random random = new Random();
 
-        while (bombPlaced < bombCount) {
+        while (bombPlaced < TOTAL_BOMB) {
             int x = random.nextInt(X_TILES);
             int y = random.nextInt(Y_TILES);
             if (grid[x][y].type != Tile.TileType.BOMB && !(Math.abs(x - initX) <= 1 && Math.abs(y - initY) <= 1)) {
@@ -274,10 +273,11 @@ public class MineGame extends Pane {
             this.getChildren().set(0, this.button);
         }
 
-        public void easyDig(List<Tile> l) {
+        public void easyDig(Tile t) {
+            List<Tile> l = getNeighbors(this);
             int flagCount = (int) l.stream().filter(tile1 -> tile1.isFlag.get()).count();
             if (this.number == flagCount) {
-                dfs(this.x, this.y);
+                bfs(this.x, this.y);
                 for (Tile i : l) {
                     if (!i.isFlag.get() && i.type == TileType.BOMB) {
                         stopTimer();
@@ -293,7 +293,8 @@ public class MineGame extends Pane {
             }
         }
 
-        public void easyFlag(List<Tile> l) {
+        public void easyFlag(Tile t) {
+            List<Tile> l = getNeighbors(this);
             int blankCount = (int) l.stream().filter(tile1 -> !tile1.isOpen).count();
             if (this.number == blankCount) {
                 for (Tile i : l) {
@@ -302,7 +303,7 @@ public class MineGame extends Pane {
                         flagCount++;
                         flags.add(i);
                         i.button.setStyle("-fx-background-color: LightGray;");
-                        setBombCount(bombCount-flagCount);
+                        setBombCount(TOTAL_BOMB-flagCount);
                     }
                 }
             }
@@ -321,12 +322,11 @@ public class MineGame extends Pane {
             }
             if (this.isOpen) {
                 if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && this.type == TileType.NUM) {
-                    List<Tile> l = getNeighbors(this);
                     if (Setting.isEasyFlag()) {
-                        easyFlag(l);
+                        easyFlag(this);
                     }
                     if (Setting.isEasyDig()) {
-                        easyDig(l);
+                        easyDig(this);
                     }
                 }
             }
@@ -370,10 +370,10 @@ public class MineGame extends Pane {
                         flags.remove(this);
                         this.button.setStyle("-fx-background-color: MediumPurple;");
                     }
-                    setBombCount(bombCount-flagCount);
+                    setBombCount(TOTAL_BOMB-flagCount);
                 }
             }
-            if ((X_TILES * Y_TILES) - openedCount == bombCount) {
+            if ((X_TILES * Y_TILES) - openedCount == TOTAL_BOMB) {
                 System.out.println("done!!!");
                 stopTimer();
                 for (Tile i:bombs) {
@@ -389,25 +389,25 @@ public class MineGame extends Pane {
             }
         }
 
-        public void toggle() {
-            if (!this.isFlag.get()) {
-                openedCount++;
-                switch (this.type) {
-                    case NUM, BOMB -> {
-                        this.icon.setVisible(true);
-                        this.button.setStyle("-fx-background-color: white;");
-                        //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                        this.isOpen = true;
-                    }
-                    case NONE -> {
-                        this.button.setStyle("-fx-background-color: white;");
-                        //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-                        this.isOpen = true;
-                        dfs(this.x, this.y);
-                    }
-                }
-            }
-        }
+//        public void toggle() {
+//            if (!this.isFlag.get()) {
+//                openedCount++;
+//                switch (this.type) {
+//                    case NUM, BOMB -> {
+//                        this.icon.setVisible(true);
+//                        this.button.setStyle("-fx-background-color: white;");
+//                        //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+//                        this.isOpen = true;
+//                    }
+//                    case NONE -> {
+//                        this.button.setStyle("-fx-background-color: white;");
+//                        //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+//                        this.isOpen = true;
+//                        dfs(this.x, this.y);
+//                    }
+//                }
+//            }
+//        }
 
     }
 
@@ -429,14 +429,14 @@ public class MineGame extends Pane {
         return this.isDone;
     }
 
-    public void dfs(int x, int y) {
-        List<Tile> l = getNeighbors(this.grid[x][y]);
-        for (Tile i : l) {
-            if (!i.isOpen && (i.type == Tile.TileType.NONE || i.type == Tile.TileType.NUM)) {
-                i.toggle();
-            }
-        }
-    }
+//    public void dfs(int x, int y) {
+//        List<Tile> l = getNeighbors(this.grid[x][y]);
+//        for (Tile i : l) {
+//            if (!i.isOpen && (i.type == Tile.TileType.NONE || i.type == Tile.TileType.NUM)) {
+//                i.toggle();
+//            }
+//        }
+//    }
 
     public void bfs(int x, int y) {
         Thread thread = new Thread(() -> {
@@ -503,5 +503,9 @@ public class MineGame extends Pane {
         BorderPane parent = (BorderPane) getParent();
         Label bombLabel = (Label) parent.lookup("#bombCount");
         bombLabel.setText(Integer.toString(bombCount));
+    }
+
+    public int getTotalBomb() {
+        return TOTAL_BOMB;
     }
 }

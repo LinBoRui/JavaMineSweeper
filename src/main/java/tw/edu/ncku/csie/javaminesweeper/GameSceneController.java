@@ -29,7 +29,7 @@ public class GameSceneController {
         }
         this.root.setCenter(new MineGame());
         resetTimer();
-        setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
+        setBombCount(prev.getTotalBomb());
     }
 
     @FXML
