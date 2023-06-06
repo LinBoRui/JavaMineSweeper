@@ -1,8 +1,11 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -14,7 +17,22 @@ public class GameSceneController {
     private BorderPane root;
 
     @FXML
+    private HBox topHBox, bottomHBox;
+
+    @FXML
     private Label bombCount, timerLabel;
+
+    @FXML
+    private void initialize() {
+        MineGame m = new MineGame();
+        root.setCenter(m);
+        // root.setPrefSize(600, 600);
+        root.setStyle("-fx-background-color: white");
+        m.setBombCount((int) Math.pow(Level.getLevelInt() + 1, 2) * 10);
+        NumberBinding size = Bindings.min(root.widthProperty().multiply(0.9), root.heightProperty().add(topHBox.heightProperty().add(bottomHBox.heightProperty()).multiply(-1)));
+        m.maxHeightProperty().bind(size);
+        m.maxWidthProperty().bind(size);
+    }
 
     @FXML
     protected void handleBackButton() throws IOException {

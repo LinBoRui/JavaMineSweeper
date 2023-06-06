@@ -24,7 +24,7 @@ public class RankSceneController {
     VBox rankListVBox;
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         rankPane.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.3), CornerRadii.EMPTY, Insets.EMPTY)));
         difficultyLabel.setText("Difficulty: " + Level.getLevelString());
         List<RankItem> rankList = Rank.getRankList();
