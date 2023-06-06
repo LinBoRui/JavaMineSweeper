@@ -61,7 +61,7 @@ public class MineGame extends Pane {
                         grid = new Tile[X_TILES][Y_TILES];
                     }
                     case MEDIUM -> {
-                        TILE_CNT = 15;
+                        TILE_CNT = 16;
                         TILE_SIZE = 25;
                         bombCount = 40;
                         X_TILES = TILE_CNT;
