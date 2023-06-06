@@ -14,28 +14,44 @@
         <MFXFontIcon description="fas-gear" size="100.0" />
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
             <children>
-                <MFXButton onMouseClicked="#handleChangeDifficultyLeft" text="">
+                <MFXButton fx:id="leftArrow" onMouseClicked="#handleChangeDifficultyLeft" text="" visible="false">
                     <graphic>
                         <MFXFontIcon description="fas-angle-left" />
                     </graphic>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
                 </MFXButton>
-                <Label fx:id="difficultyLabel" text="Easy">
+                <Label fx:id="difficultyLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="30.0" maxWidth="100.0" prefHeight="30.0" prefWidth="100.0" text="Easy">
                <font>
                   <Font name="Microsoft YaHei" size="18.0" />
                </font></Label>
-                <MFXButton onMouseClicked="#handleChangeDifficultyRight" text="">
+                <MFXButton fx:id="rightArrow" onMouseClicked="#handleChangeDifficultyRight" text="">
                     <graphic>
                         <MFXFontIcon description="fas-angle-right" />
                     </graphic>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
                 </MFXButton>
             </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+        <HBox alignment="CENTER" maxHeight="200.0" maxWidth="100.0" minHeight="200.0" minWidth="100.0" prefHeight="100.0" prefWidth="200.0">
             <children>
-                <MFXButton onMouseClicked="#handleStartGameButton" text="New Game">
+                <MFXButton alignment="CENTER" contentDisplay="CENTER" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" onMouseClicked="#handleStartGameButton" prefHeight="30.0" prefWidth="100.0" text="" textAlignment="CENTER">
                <font>
-                  <Font name="Microsoft YaHei" size="12.0" />
-               </font></MFXButton>
+                  <Font name="Microsoft YaHei" size="14.0" />
+               </font>
+               <graphic>
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="30.0" maxWidth="100.0" prefHeight="18.0" prefWidth="81.0" text="New Game" textAlignment="CENTER">
+                     <font>
+                        <Font name="Microsoft YaHei" size="14.0" />
+                     </font>
+                  </Label>
+               </graphic></MFXButton>
             </children>
         </HBox>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
