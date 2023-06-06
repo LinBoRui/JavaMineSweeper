@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,13 +21,13 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
+            rootScene = new Scene(rootPane, 400, 600);
+            MFXThemeManager.addOn(rootScene, Themes.DEFAULT);
             VBox node = (VBox) loadFxml("startscene");
             node.setStyle("-fx-background-color: white");
-            rootPane.getChildren().add(node);
-            this.rootScene = new Scene(rootPane);
-            MFXThemeManager.addOn(this.rootScene, Themes.DEFAULT);
+            addNode(node);
             stage.setTitle("Mine Sweeper");
-            stage.setScene(this.rootScene);
+            stage.setScene(rootScene);
             stage.show();
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -40,6 +41,7 @@ public class Main extends Application {
 
     public static void addNode(Node node) {
         rootPane.getChildren().add(node);
+        bindSize(node);
     }
 
     public static void removeNode(int idx) {
@@ -48,6 +50,11 @@ public class Main extends Application {
 
     public static void addFxml(String fxml) throws IOException {
         addNode(loadFxml(fxml));
+    }
+
+    public static void bindSize(Node node) {
+        ((Pane) node).prefHeightProperty().bind(rootPane.heightProperty());
+        ((Pane) node).prefWidthProperty().bind(rootPane.widthProperty());
     }
 
     public static void main(String[] args) {

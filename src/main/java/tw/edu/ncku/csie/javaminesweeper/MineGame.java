@@ -6,6 +6,8 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
@@ -25,13 +27,14 @@ import java.util.List;
 import java.util.Random;
 
 public class MineGame extends Pane {
+    private static int TILE_CNT = 10;
     private static int TILE_SIZE = 40;
-    private static final int W = 400;
-    private static final int H = 400;
-    private static int X_TILES = W / TILE_SIZE;
-    private static int Y_TILES = H / TILE_SIZE;
+    // private static final int W = 400;
+    // private static final int H = 400;
+    private static int X_TILES = TILE_CNT;
+    private static int Y_TILES = TILE_CNT;
 
-    private Tile[][] grid = new Tile[X_TILES][Y_TILES];
+    private Tile[][] grid = null;
     private ArrayList<Tile> bombs = new ArrayList<>();
     private ArrayList<Tile> flags = new ArrayList<>();
     private boolean init = false;
@@ -44,38 +47,45 @@ public class MineGame extends Pane {
     private Label timerLabel;
     private Timeline timeline;
 
+    protected boolean isCreating = false;
+    protected Thread createThread;
 
-    MineGame() {
+    MineGame(NumberBinding size) {
+        maxHeightProperty().bind(size);
+        maxWidthProperty().bind(size);
         Task<int[]> task = new Task<int[]>() {
             @Override
             public int[] call() {
-                setMaxSize(W, H);
+                isCreating = true;
                 switch (Level.currLevel) {
                     case EASY -> {
+                        TILE_CNT = 10;
                         TILE_SIZE = 40;
                         bombCount = 10;
-                        X_TILES = W / TILE_SIZE;
-                        Y_TILES = H / TILE_SIZE;
+                        X_TILES = TILE_CNT;
+                        Y_TILES = TILE_CNT;
                         grid = new Tile[X_TILES][Y_TILES];
                     }
                     case MEDIUM -> {
+                        TILE_CNT = 16;
                         TILE_SIZE = 25;
                         bombCount = 40;
-                        X_TILES = W / TILE_SIZE;
-                        Y_TILES = H / TILE_SIZE;
+                        X_TILES = TILE_CNT;
+                        Y_TILES = TILE_CNT;
                         grid = new Tile[X_TILES][Y_TILES];
                     }
                     case HARD -> {
+                        TILE_CNT = 20;
                         TILE_SIZE = 20;
                         bombCount = 90;
-                        X_TILES = W / TILE_SIZE;
-                        Y_TILES = H / TILE_SIZE;
+                        X_TILES = TILE_CNT;
+                        Y_TILES = TILE_CNT;
                         grid = new Tile[X_TILES][Y_TILES];
                     }
                 }
                 for (int y = 0; y < Y_TILES; y++) {
                     for (int x = 0; x < X_TILES; x++) {
-                        Tile tile = new Tile(x, y, TILE_SIZE);
+                        Tile tile = new Tile(x, y, widthProperty().divide(X_TILES));
                         grid[x][y] = tile;
                         updateValue(new int[]{x, y});
                     }
@@ -84,12 +94,15 @@ public class MineGame extends Pane {
             }
         };
         task.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isCreating)
+                return;
             if (newValue == null) {
                 for (int y = 0; y < Y_TILES; y++) {
                     for (int x = 0; x < X_TILES; x++) {
                         grid[x][y].setDisable(false);
                     }
                 }
+                isCreating = false;
                 return;
             }
             int[] oldloc = (oldValue != null)? (int[]) oldValue : new int[]{-1, 0};
@@ -105,9 +118,9 @@ public class MineGame extends Pane {
                 }
             }
         });
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+        createThread = new Thread(task);
+        createThread.setDaemon(true);
+        createThread.start();
     }
 
 
@@ -163,7 +176,7 @@ public class MineGame extends Pane {
         private MFXButton button;
         private MFXFontIcon icon;
         private int number;
-        private double size;
+        private DoubleBinding size;
         private BooleanProperty isFlag = new SimpleBooleanProperty(false);
         //        private boolean isFlag = false;
         private MFXFontIcon flagIcon = new MFXFontIcon("fas-flag");
@@ -173,25 +186,26 @@ public class MineGame extends Pane {
             NONE, BOMB, NUM
         }
 
-        public Tile(int x, int y, double size) {
+        public Tile(int x, int y, DoubleBinding size) {
             this.x = x;
             this.y = y;
             this.size = size;
 
-            this.flagIcon.setSize(size / 2.0);
+            prefHeightProperty().bind(size);
+            prefWidthProperty().bind(size);
 
             this.icon = new MFXFontIcon("fas-0");
             this.icon.setVisible(false);
             this.button = new MFXButton("", this.flagIcon);
             this.button.setStyle("-fx-background-color: MediumPurple");
-//            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-            this.button.setPrefSize(this.size, this.size);
-            this.button.setMaxSize(this.size, this.size);
+            //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+            this.button.prefHeightProperty().bind(heightProperty());
+            this.button.prefWidthProperty().bind(widthProperty());
             this.button.setPadding(new Insets(0, 0, 0, 0));
             this.button.setOnMouseClicked(this::open);
 
             this.flagIcon.visibleProperty().bind(this.isFlag);
-//            this.flagIcon.setSize(this.size);
+            this.flagIcon.sizeProperty().bind(size.divide(2));
 
             this.setStyle("-fx-background-color: gray");
 //            this.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -200,40 +214,41 @@ public class MineGame extends Pane {
             Line topLine = new Line();
             topLine.setStartX(0);
             topLine.setStartY(0);
-            topLine.setEndX(TILE_SIZE - TILE_SIZE / 4.0);
+            topLine.endXProperty().bind(widthProperty().multiply(0.75));
             topLine.setEndY(0);
             topLine.setStroke(lineColor);
             topLine.setStrokeWidth(lineWidth);
-            topLine.setTranslateY(TILE_SIZE / 2.0);
+            topLine.translateYProperty().bind(heightProperty().divide(2));
 
             Line rightLine = new Line();
             rightLine.setStartX(0);
             rightLine.setStartY(0);
             rightLine.setEndX(0);
-            rightLine.setEndY(TILE_SIZE - TILE_SIZE / 4.0);
+            rightLine.endYProperty().bind(heightProperty().multiply(0.75));
             rightLine.setStroke(lineColor);
             rightLine.setStrokeWidth(lineWidth);
-            rightLine.setTranslateX(TILE_SIZE / 2.0);
+            rightLine.translateXProperty().bind(widthProperty().divide(2));
 
             Line bottomLine = new Line();
             bottomLine.setStartX(0);
             bottomLine.setStartY(TILE_SIZE);
-            bottomLine.setEndX(TILE_SIZE - TILE_SIZE / 4.0);
+            topLine.endXProperty().bind(widthProperty().multiply(0.75));
             bottomLine.setEndY(TILE_SIZE);
             bottomLine.setStroke(lineColor);
             bottomLine.setStrokeWidth(lineWidth);
-            bottomLine.setTranslateY(-(TILE_SIZE / 2.0));
+            rightLine.translateXProperty().bind(widthProperty().divide(-2));
 
             Line leftLine = new Line();
             leftLine.setStartX(TILE_SIZE);
             leftLine.setStartY(0);
             leftLine.setEndX(TILE_SIZE);
-            leftLine.setEndY(TILE_SIZE - TILE_SIZE / 4.0);
+            rightLine.endYProperty().bind(heightProperty().multiply(0.75));
             leftLine.setStroke(lineColor);
             leftLine.setStrokeWidth(lineWidth);
-            leftLine.setTranslateX(-(TILE_SIZE / 2.0));
-            setTranslateX(x * TILE_SIZE);
-            setTranslateY(y * TILE_SIZE);
+            rightLine.translateXProperty().bind(widthProperty().divide(-2));
+
+            translateXProperty().bind(widthProperty().multiply(x));
+            translateYProperty().bind(heightProperty().multiply(y));
             this.getChildren().addAll(this.button, topLine, rightLine, bottomLine, leftLine);
 
         }
@@ -243,7 +258,7 @@ public class MineGame extends Pane {
             this.number = number;
             this.icon = new MFXFontIcon(String.format("fas-%d", number));
             this.icon.setVisible(false);
-            this.icon.setSize(size / 2.0);
+            this.icon.sizeProperty().bind(this.size.divide(2));
             StackPane p = new StackPane(this.flagIcon, this.icon);
             this.button = new MFXButton("", p);
             this.button.setPadding(new Insets(0, 0, 0, 0));
@@ -251,8 +266,8 @@ public class MineGame extends Pane {
             this.button.setOnMouseClicked(this::open);
             this.button.setStyle("-fx-background-color: MediumPurple");
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-            this.button.setPrefSize(this.size, this.size);
-            this.button.setMaxSize(this.size, this.size);
+            this.button.prefHeightProperty().bind(heightProperty());
+            this.button.prefWidthProperty().bind(widthProperty());
             this.getChildren().set(0, this.button);
 
         }
@@ -261,6 +276,7 @@ public class MineGame extends Pane {
             this.type = TileType.BOMB;
             this.icon = new MFXFontIcon("fas-bomb");
             this.icon.setVisible(false);
+            this.icon.sizeProperty().bind(this.size.divide(2));
 
             StackPane p = new StackPane(this.flagIcon, this.icon);
             this.button = new MFXButton("", p);
@@ -268,8 +284,8 @@ public class MineGame extends Pane {
             this.button.setOnMouseClicked(this::open);
             this.button.setStyle("-fx-background-color: MediumPurple");
 //            this.button.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
-            this.button.setPrefSize(this.size, this.size);
-            this.button.setMaxSize(this.size, this.size);
+            this.button.prefHeightProperty().bind(heightProperty());
+            this.button.prefWidthProperty().bind(widthProperty());
 
             this.getChildren().set(0, this.button);
         }

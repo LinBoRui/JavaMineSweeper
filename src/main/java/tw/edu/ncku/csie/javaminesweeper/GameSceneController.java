@@ -1,8 +1,11 @@
 package tw.edu.ncku.csie.javaminesweeper;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -10,11 +13,26 @@ import java.io.IOException;
 
 public class GameSceneController {
 
+    NumberBinding size;
+
     @FXML
     private BorderPane root;
 
     @FXML
+    private HBox topHBox, bottomHBox;
+
+    @FXML
     private Label bombCount, timerLabel;
+
+    @FXML
+    private void initialize() {
+        size = Bindings.min(root.widthProperty().multiply(0.9), root.heightProperty().add(topHBox.heightProperty().add(bottomHBox.heightProperty()).multiply(-1)));
+        MineGame m = new MineGame(size);
+        root.setCenter(m);
+        // root.setPrefSize(600, 600);
+        root.setStyle("-fx-background-color: white");
+        setBombCount((int) Math.pow(Level.getLevelInt() + 1, 2) * 10);
+    }
 
     @FXML
     protected void handleBackButton() throws IOException {
@@ -24,10 +42,13 @@ public class GameSceneController {
     @FXML
     protected void handleRestartButton() {
         MineGame prev = (MineGame) this.root.getCenter();
+        if (prev.isCreating) {
+            prev.createThread.interrupt();
+        }
         if (prev.getInit()) {
             prev.stopTimer();
         }
-        this.root.setCenter(new MineGame());
+        this.root.setCenter(new MineGame(size));
         resetTimer();
         setBombCount((int)Math.pow(Level.getLevelInt()+1, 2) * 10);
     }
