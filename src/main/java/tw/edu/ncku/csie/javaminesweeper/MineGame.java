@@ -33,20 +33,18 @@ public class MineGame extends Pane {
     // private static final int H = 400;
     private static int X_TILES = TILE_CNT;
     private static int Y_TILES = TILE_CNT;
+    private static int TOTAL_BOMB = 0;
 
     private Tile[][] grid = null;
     private ArrayList<Tile> bombs = new ArrayList<>();
     private ArrayList<Tile> flags = new ArrayList<>();
     private boolean init = false;
     private boolean isDone = false;
-    private int bombCount = 0;
     private int flagCount = 0;
     private int openedCount = 0;
-
     private int seconds = 0;
     private Label timerLabel;
     private Timeline timeline;
-
     protected boolean isCreating = false;
     protected Thread createThread;
 
@@ -61,7 +59,7 @@ public class MineGame extends Pane {
                     case EASY -> {
                         TILE_CNT = 10;
                         TILE_SIZE = 40;
-                        bombCount = 10;
+                        TOTAL_BOMB = 10;
                         X_TILES = TILE_CNT;
                         Y_TILES = TILE_CNT;
                         grid = new Tile[X_TILES][Y_TILES];
@@ -69,7 +67,7 @@ public class MineGame extends Pane {
                     case MEDIUM -> {
                         TILE_CNT = 16;
                         TILE_SIZE = 25;
-                        bombCount = 40;
+                        TOTAL_BOMB = 40;
                         X_TILES = TILE_CNT;
                         Y_TILES = TILE_CNT;
                         grid = new Tile[X_TILES][Y_TILES];
@@ -77,7 +75,7 @@ public class MineGame extends Pane {
                     case HARD -> {
                         TILE_CNT = 20;
                         TILE_SIZE = 20;
-                        bombCount = 90;
+                        TOTAL_BOMB = 90;
                         X_TILES = TILE_CNT;
                         Y_TILES = TILE_CNT;
                         grid = new Tile[X_TILES][Y_TILES];
@@ -128,7 +126,7 @@ public class MineGame extends Pane {
         int bombPlaced = 0;
         Random random = new Random();
 
-        while (bombPlaced < bombCount) {
+        while (bombPlaced < TOTAL_BOMB) {
             int x = random.nextInt(X_TILES);
             int y = random.nextInt(Y_TILES);
             if (grid[x][y].type != Tile.TileType.BOMB && !(Math.abs(x - initX) <= 1 && Math.abs(y - initY) <= 1)) {
@@ -290,7 +288,8 @@ public class MineGame extends Pane {
             this.getChildren().set(0, this.button);
         }
 
-        public void easyDig(List<Tile> l) {
+        public void easyDig(Tile t) {
+            List<Tile> l = getNeighbors(t);
             int flagCount = (int) l.stream().filter(tile1 -> tile1.isFlag.get()).count();
             if (this.number == flagCount) {
                 dfs(this.x, this.y);
@@ -309,7 +308,8 @@ public class MineGame extends Pane {
             }
         }
 
-        public void easyFlag(List<Tile> l) {
+        public void easyFlag(Tile t) {
+            List<Tile> l = getNeighbors(t);
             int blankCount = (int) l.stream().filter(tile1 -> !tile1.isOpen).count();
             if (this.number == blankCount) {
                 for (Tile i : l) {
@@ -318,7 +318,7 @@ public class MineGame extends Pane {
                         flagCount++;
                         flags.add(i);
                         i.button.setStyle("-fx-background-color: LightGray;");
-                        setBombCount(bombCount-flagCount);
+                        setBombCount(TOTAL_BOMB-flagCount);
                     }
                 }
             }
@@ -336,13 +336,12 @@ public class MineGame extends Pane {
                 return;
             }
             if (this.isOpen) {
-                if ((e.getButton() == MouseButton.PRIMARY ^ Setting.getDefaultClick()) && this.type == TileType.NUM) {
-                    List<Tile> l = getNeighbors(this);
+                if (this.type == TileType.NUM) {
                     if (Setting.isEasyFlag()) {
-                        easyFlag(l);
+                        easyFlag(this);
                     }
                     if (Setting.isEasyDig()) {
-                        easyDig(l);
+                        easyDig(this);
                     }
                 }
             }
@@ -353,7 +352,7 @@ public class MineGame extends Pane {
 //                        this.button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
                         this.isOpen = true;
                         openedCount++;
-                        bfs(this.x, this.y);
+                        dfs(this.x, this.y);
                     }
                     case NUM -> {
                         this.icon.setVisible(true);
@@ -386,10 +385,10 @@ public class MineGame extends Pane {
                         flags.remove(this);
                         this.button.setStyle("-fx-background-color: MediumPurple;");
                     }
-                    setBombCount(bombCount-flagCount);
+                    setBombCount(TOTAL_BOMB-flagCount);
                 }
             }
-            if ((X_TILES * Y_TILES) - openedCount == bombCount) {
+            if ((X_TILES * Y_TILES) - openedCount == TOTAL_BOMB) {
                 System.out.println("done!!!");
                 stopTimer();
                 for (Tile i:bombs) {
@@ -441,10 +440,6 @@ public class MineGame extends Pane {
         return this.init;
     }
 
-    public boolean getDone() {
-        return this.isDone;
-    }
-
     public void dfs(int x, int y) {
         List<Tile> l = getNeighbors(this.grid[x][y]);
         for (Tile i : l) {
@@ -454,40 +449,40 @@ public class MineGame extends Pane {
         }
     }
 
-    public void bfs(int x, int y) {
-        Thread thread = new Thread(() -> {
-            List<Tile> openList = getNeighbors(this.grid[x][y]);
-            Runnable updater = () -> {
-                while (openList.size() > 0) {
-                    Tile t = openList.remove(0);
-                    if (!t.isOpen && !t.isFlag.get()) {
-                        openedCount++;
-                        t.isOpen = true;
-                        t.button.setStyle("-fx-background-color: white;");
-                        if (t.type == Tile.TileType.NUM) {
-                            t.icon.setVisible(true);
-                        }
-                        if (t.type == Tile.TileType.NONE) {
-                            List<Tile> tmp = getNeighbors(t);
-                            openList.addAll(tmp);
-                        }
-                    }
-                }
-            };
-
-            while (openList.size() > 0) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Platform.runLater(updater);
-            }
-
-        });
-        thread.setDaemon(true);
-        thread.start();
-    }
+//    public void bfs(int x, int y) {
+//        Thread thread = new Thread(() -> {
+//            List<Tile> openList = getNeighbors(this.grid[x][y]);
+//            Runnable updater = () -> {
+//                while (openList.size() > 0) {
+//                    Tile t = openList.remove(0);
+//                    if (!t.isOpen && !t.isFlag.get()) {
+//                        openedCount++;
+//                        t.isOpen = true;
+//                        t.button.setStyle("-fx-background-color: white;");
+//                        if (t.type == Tile.TileType.NUM) {
+//                            t.icon.setVisible(true);
+//                        }
+//                        if (t.type == Tile.TileType.NONE) {
+//                            List<Tile> tmp = getNeighbors(t);
+//                            openList.addAll(tmp);
+//                        }
+//                    }
+//                }
+//            };
+//
+//            while (openList.size() > 0) {
+//                try {
+//                    Thread.sleep(50);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                Platform.runLater(updater);
+//            }
+//
+//        });
+//        thread.setDaemon(true);
+//        thread.start();
+//    }
 
     public void startTimer() {
         BorderPane parent = (BorderPane) getParent();
@@ -519,5 +514,9 @@ public class MineGame extends Pane {
         BorderPane parent = (BorderPane) getParent();
         Label bombLabel = (Label) parent.lookup("#bombCount");
         bombLabel.setText(Integer.toString(bombCount));
+    }
+
+    public int getTotalBomb() {
+        return TOTAL_BOMB;
     }
 }
